@@ -1,0 +1,6 @@
+pytest
+selenium
+allure-pytest
+pytest-html
+pymysql==1.1.0
+WooCommerce

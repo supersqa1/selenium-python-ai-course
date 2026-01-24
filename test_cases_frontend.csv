@@ -1,0 +1,87 @@
+Test Case ID,Title,Description,Priority,Component,Pre-conditions,Steps,Expected Result
+TC-66,Verify Expired Coupon Error Message,Verify that a user receives an atomic error message when attempting to apply a coupon code that has expired.,Medium,Cart,Valid expired coupon exists in the system.,"1. Navigate to the Home Page.
+2. Add any item to the Cart.
+3. Navigate to the Cart Page.
+4. Enter an expired coupon code.
+5. Click 'Apply Coupon'.",Error message 'This coupon has expired.' is displayed to the user.
+TC-69,Verify Free Shipping Banner on Home Page,Ensure the free shipping promotional banner is visible on the Home Page to encourage higher order value.,High,UI Components,none,"1. Navigate to the Home Page.
+2. Observe the top notification bar.",The banner text 'Free shipping on orders over $50' is clearly visible.
+TC-70,Verify Free Shipping Banner on Cart Page,Ensure the free shipping promotional banner is visible on the Cart Page.,Medium,UI Components,none,"1. Navigate to the Cart Page.
+2. Observe the top notification bar.",The banner text 'Free shipping on orders over $50' is clearly visible.
+TC-71,Verify Free Shipping Banner on Checkout Page,Ensure the free shipping promotional banner is visible on the Checkout Page.,Medium,UI Components,Items in cart to access checkout.,"1. Add an item to the cart.
+2. Navigate to the Checkout Page.
+3. Observe the top notification bar.",The banner text 'Free shipping on orders over $50' is clearly visible.
+TC-72,Verify Free Shipping Banner Not on My Account,Ensure the visual clutter is minimized by verifying the free shipping banner does NOT appear on the My Account page.,Low,UI Components,none,"1. Navigate to the My Account Page.
+2. Observe the top notification bar area.",The free shipping banner is NOT displayed.
+TC-33,Guest User Checkout End-to-End Flow,Verify that a guest user can successfully complete a purchase using a free coupon code.,Critical,Checkout,Free coupon code available.,"1. Navigate to Home Page.
+2. Add an item to the Cart.
+3. Navigate to the Cart Page.
+4. Apply a valid free coupon.
+5. Proceed to Checkout.
+6. Enter valid billing details.
+7. Click 'Place Order'.",User is redirected to Order Received page. Order is successfully created in the database.
+TC-01,Verify Product Grid Display,Smoke test to ensure the main product grid renders the correct number of products on load.,High,Home Page,none,"1. Navigate to the Home Page.
+2. Count the number of product cards displayed in the main grid.",Exactly 16 products are displayed.
+TC-67,Verify Home Page Heading,Ensure the main shop heading is present and correct.,Low,Home Page,none,"1. Navigate to the Home Page.
+2. Locate the main page heading.",The heading text reads 'Shop'.
+TC-68,Verify Main Navigation Menu,Ensure all primary navigation menu items are rendered.,High,Home Page,none,1. detailed check of the header section.,"Home, Cart, Checkout, and My Account links are visible."
+TC-12,Verify Login Failure for Non-Existing User,Ensure appropriate security feedback is given when logging in with a non-existent username.,Medium,My Account,none,"1. Navigate to My Account page.
+2. Enter a non-existent username.
+3. Enter any password.
+4. Click Login.",Error message displayed: 'Error: The username... is not registered on this site.'
+TC-13,New User Registration,Verify a visitor can register a new account.,High,My Account,none,"1. Navigate to My Account page.
+2. Enter a new email address.
+3. Enter a valid password.
+4. Click Register.",User is registered and immediately signed in.
+TC-80,Verify Product Name on PDP,Ensure the product detail page (PDP) displays the correct product title.,High,PDP,Variable product exists.,"1. Open PDP for a variable product.
+2. Observe product title.",Title matches the product database/API record.
+TC-81,Verify Main Product Image,Ensure the main product image loads correctly on the PDP.,High,PDP,Variable product exists.,"1. Open PDP for a variable product.
+2. Inspect the main image element.",Main image source URL is correct and image is visible.
+TC-82,Verify Product Image Gallery,Ensure product thumbnails/gallery images are displayed.,Medium,PDP,Variable product exists.,"1. Open PDP for a variable product.
+2. Inspect thumbnail images.",All secondary images associated with product are visible.
+TC-83,Verify Variable Product Indicator,Ensure the customer is informed that the product is variable.,Low,PDP,Variable product exists.,"1. Open PDP for a variable product.
+2. Check for type description text.",Text 'This is a variable product' is present.
+TC-84,Verify Price Range Display,Ensure the price range is displayed for variable products.,High,PDP,Variable product exists.,"1. Open PDP for a variable product.
+2. Observe price section.",Price HTML matches the expected price range.
+TC-85,Verify Add to Cart Button Visibility,Ensure the Add to Cart button is present on the page.,High,PDP,Variable product exists.,"1. Open PDP for a variable product.
+2. Locate 'Add to cart' button.",Button is visible with text 'Add to cart'.
+TC-86,Verify Quantity Field Default,Ensure the quantity input defaults to 1.,Low,PDP,Variable product exists.,"1. Open PDP for a variable product.
+2. Check quantity input value.",Default value is '1'.
+TC-87,Verify Product SKU,Ensure the correct SKU is displayed.,Medium,PDP,Variable product exists.,"1. Open PDP for a variable product.
+2. Check SKU field.",SKU matches the product record.
+TC-88,Verify Product Category,Ensure the correct Category is displayed.,Medium,PDP,Variable product exists.,"1. Open PDP for a variable product.
+2. Check Category field.",Category matches the product record.
+TC-89,Verify Product Description,Ensure the full product description is rendered correctly.,Medium,PDP,Variable product exists.,"1. Open PDP for a variable product.
+2. Read product description.",Description text matches the API record.
+TC-90,Verify Description Section Header,Ensure the standard 'Description' header exists.,Low,PDP,Variable product exists.,"1. Open PDP for a variable product.
+2. Locate description section.",Header text is 'Description'.
+TC-91,Verify Related Products Header,Ensure the 'Related products' section exists.,Low,PDP,Variable product exists.,"1. Open PDP for a variable product.
+2. Locate related products section.",Header text is 'Related products'.
+TC-92,Verify Related Products List,Ensure related products are displayed with images.,Medium,PDP,Variable product exists.,"1. Open PDP for a variable product.
+2. UI check of related products.",Up to 3 related products are displayed with valid images.
+TC-93,Verify Product Tabs,Ensure all standard informational tabs are present.,Medium,PDP,Variable product exists.,"1. Open PDP for a variable product.
+2. Check left navigation tabs.","Tabs 'Description', 'Additional information', and 'Reviews' are present."
+TC-94,Verify Color Attribute Label,Ensure the Color dropdown is correctly labeled.,Low,PDP,Variable product exists.,"1. Open PDP for a variable product.
+2. Check color selector label.",Label reads 'Color'.
+TC-95,Verify Logo Attribute Label,Ensure the Logo dropdown is correctly labeled.,Low,PDP,Variable product exists.,"1. Open PDP for a variable product.
+2. Check logo selector label.",Label reads 'Logo'.
+TC-96,Add Variable Product to Cart,Verify user can select options and add to cart.,Critical,PDP,Product 'hoodie' exists.,"1. Navigate to Hoodie PDP.
+2. Select Color: 'Blue'.
+3. Select Logo: 'Yes'.
+4. Click 'Add to cart'.
+5. View Cart.","Product 'Hoodie - Blue, Yes' is present in the cart."
+TC-97,Verify Option Counts,Ensure the dropdowns contain the correct number of choices.,Medium,PDP,Product 'hoodie' exists.,"1. Navigate to Hoodie PDP.
+2. Expand Color and Logo dropdowns.",Color has 4 options; Logo has 3 options (including defaults).
+TC-98,Verify Color Options Content,Ensure the Color dropdown contains specific values.,Medium,PDP,Product 'hoodie' exists.,"1. Navigate to Hoodie PDP.
+2. Inspect Color dropdown values.","Contains: Blue, Green, Red."
+TC-99,Verify Logo Options Content,Ensure the Logo dropdown contains specific values.,Medium,PDP,Product 'hoodie' exists.,"1. Navigate to Hoodie PDP.
+2. Inspect Logo dropdown values.","Contains: Yes, No."
+TC-100,Clear Selection (Color Only),Verify the 'Reset' button functions when only one attribute is selected.,Low,PDP,Product 'hoodie' exists.,"1. Navigate to Hoodie PDP.
+2. Select 'Green'.
+3. Click 'Clear/Reset' link.",Color selection reverts to 'Choose an option'.
+TC-101,Clear Selection (Logo Only),Verify the 'Reset' button functions when only one attribute is selected.,Low,PDP,Product 'hoodie' exists.,"1. Navigate to Hoodie PDP.
+2. Select 'No'.
+3. Click 'Clear/Reset' link.",Logo selection reverts to 'Choose an option'.
+TC-102,Clear Selection (Both Attributes),Verify the 'Reset' button clears all attributes.,Low,PDP,Product 'hoodie' exists.,"1. Navigate to Hoodie PDP.
+2. Select 'Green' and 'No'.
+3. Click 'Clear/Reset' link.",Both dropdowns revert to 'Choose an option'.
