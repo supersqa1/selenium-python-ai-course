@@ -1,6 +1,73 @@
 
 
 import os
+import sys
+
+def validate_environment():
+    """
+    Validates environment variables at framework startup.
+    All variables are required to fail fast and prevent partial test suite failures.
+    Raises EnvironmentError if any required variables are missing.
+    """
+    # All required variables (fail fast approach for CI/CD and full test runs)
+    required_vars = {
+        'BROWSER': {
+            'description': 'Browser to use for tests',
+            'options': 'chrome, firefox, headlesschrome, headlessfirefox',
+            'example': 'export BROWSER=chrome'
+        },
+        'RESULTS_DIR': {
+            'description': 'Directory for test results and reports',
+            'example': 'export RESULTS_DIR=./results'
+        },
+        'API_KEY': {
+            'description': 'WooCommerce API key (required for API tests)',
+            'example': 'export API_KEY=ck_...'
+        },
+        'API_SECRET': {
+            'description': 'WooCommerce API secret (required for API tests)',
+            'example': 'export API_SECRET=cs_...'
+        },
+        'DB_USER': {
+            'description': 'Database username (required for database tests)',
+            'example': 'export DB_USER=root'
+        },
+        'DB_PASSWORD': {
+            'description': 'Database password (required for database tests)',
+            'example': 'export DB_PASSWORD=root'
+        }
+    }
+    
+    # Check all required variables
+    missing_vars = []
+    error_details = []
+    
+    for var_name, var_info in required_vars.items():
+        value = os.environ.get(var_name)
+        if not value:
+            missing_vars.append(var_name)
+            error_details.append(
+                f"   ❌ {var_name}: {var_info['description']}\n"
+                f"      Example: {var_info.get('example', 'N/A')}"
+            )
+    
+    # If any variables are missing, raise error with clear message
+    if missing_vars:
+        raise EnvironmentError(
+            f"""❌ Missing required environment variables:
+
+{chr(10).join(error_details)}
+
+To fix:
+   1. Create a .env file in the project root (copy from .env.example)
+   2. Or set manually: export BROWSER=chrome export RESULTS_DIR=./results export API_KEY=... export API_SECRET=... export DB_USER=... export DB_PASSWORD=...
+   3. Or source env.sh: source env.sh
+
+Note: All variables are required to ensure full test suite can run. 
+      If you only want to run specific tests, use pytest markers or test selection."""
+        )
+    
+    return True
 
 def get_base_url():
 

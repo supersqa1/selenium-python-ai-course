@@ -1,0 +1,54 @@
+---
+description: Never commit code unless explicitly requested by the user
+alwaysApply: true
+---
+
+# Git Commit Policy
+
+## Critical Rule: No Automatic Commits
+
+**NEVER commit code unless the user explicitly asks you to commit.**
+
+### What This Means
+
+- ❌ **DO NOT** commit after making changes
+- ❌ **DO NOT** commit when you think changes are "complete"
+- ❌ **DO NOT** commit as part of a workflow unless explicitly asked
+- ❌ **DO NOT** assume "commit and push" is implied
+
+### When You CAN Commit
+
+✅ Only commit when the user explicitly says:
+- "commit the changes"
+- "commit and push"
+- "go ahead and commit"
+- "commit this"
+- Any other explicit instruction to commit
+
+### What To Do Instead
+
+When you make changes:
+1. Make the code changes
+2. Inform the user what was changed
+3. Wait for explicit instruction to commit
+4. If you think a commit might be needed, ask: "Would you like me to commit these changes?"
+
+### Examples
+
+**❌ WRONG:**
+```
+User: "Fix the bug in config_helpers.py"
+AI: [makes changes] [commits automatically] "Fixed and committed!"
+```
+
+**✅ CORRECT:**
+```
+User: "Fix the bug in config_helpers.py"
+AI: [makes changes] "Fixed the bug. The changes are ready. Would you like me to commit them?"
+```
+
+**✅ CORRECT:**
+```
+User: "Fix the bug and commit it"
+AI: [makes changes] [commits] "Fixed and committed!"
+```
