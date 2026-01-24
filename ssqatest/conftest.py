@@ -5,6 +5,11 @@ from selenium.webdriver.firefox.options import Options as FFOptions
 
 import os
 import allure
+from dotenv import load_dotenv
+
+# Load environment variables from .env file (if it exists)
+# This happens automatically before any fixtures or tests run
+load_dotenv()
 
 @pytest.fixture(scope="class")
 def init_driver(request):
@@ -13,12 +18,25 @@ def init_driver(request):
 
     browser = os.environ.get('BROWSER', None)
     if not browser:
-        raise Exception("The environment variable 'BROWSER' must be set.")
+        raise EnvironmentError(
+            "❌ Missing required environment variable: BROWSER\n"
+            "   This is required for all tests.\n"
+            "   \n"
+            "   To fix:\n"
+            "   1. Source the environment file: source env.sh\n"
+            "   2. Or set manually: export BROWSER=chrome\n"
+            "   \n"
+            f"   Supported browsers: {', '.join(supported_browsers)}"
+        )
 
     browser = browser.lower()
     if browser not in supported_browsers:
-        raise Exception(f"Provided browser '{browser}' is not one of the supported."
-                        f"Supported are: {supported_browsers}")
+        raise ValueError(
+            f"❌ Unsupported browser: '{browser}'\n"
+            f"   \n"
+            f"   Supported browsers: {', '.join(supported_browsers)}\n"
+            f"   Set via: export BROWSER=chrome (or one of the supported options)"
+        )
 
     if browser in ('chrome', 'ch'):
         driver = webdriver.Chrome()
