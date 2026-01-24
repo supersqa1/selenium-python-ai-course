@@ -1,0 +1,35 @@
+
+- write a test with the url hard coded
+--- but then how about environemnts? better make it a config
+
+- I think the login negative test is best starting point
+    -- hard code the email
+    -- mention will create a helper for random email
+    --
+- Second test case is for registration
+    -- this tiem craete the function to create random email
+
+-- AT CHECKOUT AS A GUEST, CLICK ON CREATE ACCOUNT
+-- additiona informatin field, then check the db
+-- clicking on the create account, displayes the password field
+
+- database helpers to check order is in db
+- api helpers to check user is actually created
+- api helper to find product id and verify it is there
+- api helper to find coupons
+- create user and verify by calling api
+- may be do other tests before doing end to end
+
+
+=====
+testtest@supersqa.com
+deletemesoon
+
+
+### test case
+TC: apply coupon and click remove, should remove it
+TC: none existing coupon error message
+TC: expired couponmessage
+
+### COMMAND
+python -m pytest --html=./results/out.html --self-contained-html
