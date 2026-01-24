@@ -2,6 +2,11 @@ import pytest
 import argparse
 import os
 import logging as logger
+from dotenv import load_dotenv
+
+# Load environment variables from .env file (if it exists)
+# This ensures .env is loaded whether tests are run via runner.py or pytest directly
+load_dotenv()
 
 def add_drivers_to_path():
     pass
