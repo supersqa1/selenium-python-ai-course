@@ -6,13 +6,10 @@ import sys
 def validate_environment():
     """
     Validates environment variables at framework startup.
-    Checks required variables and warns about missing optional variables.
-    Raises EnvironmentError if critical variables are missing.
+    All variables are required to fail fast and prevent partial test suite failures.
+    Raises EnvironmentError if any required variables are missing.
     """
-    errors = []
-    warnings = []
-    
-    # Required variables (framework won't work without these)
+    # All required variables (fail fast approach for CI/CD and full test runs)
     required_vars = {
         'BROWSER': {
             'description': 'Browser to use for tests',
@@ -22,83 +19,53 @@ def validate_environment():
         'RESULTS_DIR': {
             'description': 'Directory for test results and reports',
             'example': 'export RESULTS_DIR=./results'
-        }
-    }
-    
-    # Optional variables (needed for specific test types)
-    optional_vars = {
+        },
         'API_KEY': {
             'description': 'WooCommerce API key (required for API tests)',
-            'test_type': 'API-related tests',
             'example': 'export API_KEY=ck_...'
         },
         'API_SECRET': {
             'description': 'WooCommerce API secret (required for API tests)',
-            'test_type': 'API-related tests',
             'example': 'export API_SECRET=cs_...'
         },
         'DB_USER': {
             'description': 'Database username (required for database tests)',
-            'test_type': 'Database-related tests',
             'example': 'export DB_USER=root'
         },
         'DB_PASSWORD': {
             'description': 'Database password (required for database tests)',
-            'test_type': 'Database-related tests',
             'example': 'export DB_PASSWORD=root'
         }
     }
     
-    # Check required variables
-    missing_required = []
+    # Check all required variables
+    missing_vars = []
+    error_details = []
+    
     for var_name, var_info in required_vars.items():
         value = os.environ.get(var_name)
         if not value:
-            missing_required.append(var_name)
-            errors.append(
+            missing_vars.append(var_name)
+            error_details.append(
                 f"   ❌ {var_name}: {var_info['description']}\n"
                 f"      Example: {var_info.get('example', 'N/A')}"
             )
     
-    # Check optional variables
-    missing_optional = []
-    for var_name, var_info in optional_vars.items():
-        value = os.environ.get(var_name)
-        if not value:
-            missing_optional.append(var_name)
-            warnings.append(
-                f"   ⚠️  {var_name}: {var_info['description']}\n"
-                f"      Needed for: {var_info.get('test_type', 'N/A')}\n"
-                f"      Example: {var_info.get('example', 'N/A')}"
-            )
-    
-    # Build error message
-    if errors:
-        error_msg = "❌ Missing required environment variables:\n\n"
-        error_msg += "\n".join(errors)
-        error_msg += "\n\n"
-        error_msg += "To fix:\n"
-        error_msg += "   1. Create a .env file in the project root (copy from .env.example)\n"
-        error_msg += "   2. Or set manually: export BROWSER=chrome export RESULTS_DIR=./results\n"
-        error_msg += "   3. Or source env.sh: source env.sh\n"
-        
-        if warnings:
-            error_msg += "\n"
-            error_msg += "⚠️  Also missing optional variables (some tests may fail):\n\n"
-            error_msg += "\n".join(warnings)
-            error_msg += "\n"
-            error_msg += "   These are optional but required for specific test types.\n"
-        
-        raise EnvironmentError(error_msg)
-    
-    # Show warnings if optional vars are missing (but don't fail)
-    if warnings:
-        warning_msg = "⚠️  Missing optional environment variables (some tests may fail):\n\n"
-        warning_msg += "\n".join(warnings)
-        warning_msg += "\n"
-        warning_msg += "   These are optional but required for specific test types.\n"
-        warning_msg += "   To fix: Add them to your .env file or set them manually.\n"
-        print(warning_msg, file=sys.stderr)
+    # If any variables are missing, raise error with clear message
+    if missing_vars:
+        raise EnvironmentError(
+            f"""❌ Missing required environment variables:
+
+{chr(10).join(error_details)}
+
+To fix:
+   1. Create a .env file in the project root (copy from .env.example)
+   2. Or set manually: export BROWSER=chrome export RESULTS_DIR=./results export API_KEY=... export API_SECRET=... export DB_USER=... export DB_PASSWORD=...
+   3. Or source env.sh: source env.sh
+
+Note: All variables are required to ensure full test suite can run. 
+      If you only want to run specific tests, use pytest markers or test selection."""
+        )
     
     return True
 
