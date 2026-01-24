@@ -6,10 +6,15 @@ from selenium.webdriver.firefox.options import Options as FFOptions
 import os
 import allure
 from dotenv import load_dotenv
+from ssqatest.src.helpers.config_helpers import validate_environment
 
 # Load environment variables from .env file (if it exists)
 # This happens automatically before any fixtures or tests run
 load_dotenv()
+
+# Validate environment variables at startup
+# This checks required variables and warns about missing optional ones
+validate_environment()
 
 @pytest.fixture(scope="class")
 def init_driver(request):
