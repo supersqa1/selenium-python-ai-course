@@ -98,57 +98,21 @@ class ProductPage(ProductPageLocators):
 
     def get_color_dropdown_options_values_and_text(self):
         """
-        Gets color dropdown options with retry logic for stale elements.
-        Re-fetches elements on each retry to avoid stale element exceptions.
+        Gets color dropdown options with value and text.
+        Retry logic is handled in SeleniumExtended.wait_and_get_dropdown_options_with_attributes().
         """
-        max_retries = 3
-        retry_delay = 0.5
-        
-        for attempt in range(max_retries):
-            try:
-                options_elements = self.get_color_dropdown_options_elements()
-                value_and_text = []
-                for element in options_elements:
-                    # Re-check visibility to ensure element is not stale
-                    self.sl.wait_until_element_is_visible(element)
-                    value_and_text.append({
-                        'value': element.get_attribute('value'),
-                        'text': element.text
-                    })
-                return value_and_text
-            except StaleElementReferenceException:
-                if attempt < max_retries - 1:
-                    time.sleep(retry_delay)
-                    continue
-                else:
-                    raise
+        return self.sl.wait_and_get_dropdown_options_with_attributes(
+            self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_OPTIONS
+        )
 
     def get_logo_dropdown_options_values_and_text(self):
         """
-        Gets logo dropdown options with retry logic for stale elements.
-        Re-fetches elements on each retry to avoid stale element exceptions.
+        Gets logo dropdown options with value and text.
+        Retry logic is handled in SeleniumExtended.wait_and_get_dropdown_options_with_attributes().
         """
-        max_retries = 3
-        retry_delay = 0.5
-        
-        for attempt in range(max_retries):
-            try:
-                options_elements = self.get_logo_dropdown_options_elements()
-                value_and_text = []
-                for element in options_elements:
-                    # Re-check visibility to ensure element is not stale
-                    self.sl.wait_until_element_is_visible(element)
-                    value_and_text.append({
-                        'value': element.get_attribute('value'),
-                        'text': element.text
-                    })
-                return value_and_text
-            except StaleElementReferenceException:
-                if attempt < max_retries - 1:
-                    time.sleep(retry_delay)
-                    continue
-                else:
-                    raise
+        return self.sl.wait_and_get_dropdown_options_with_attributes(
+            self.VARIABLE_PRODUCT_LOGO_ATTRIBUTE_OPTIONS
+        )
 
     def select_color_option_by_visible_text(self, color):
         """

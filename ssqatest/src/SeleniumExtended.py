@@ -174,3 +174,34 @@ class SeleniumExtended:
                     continue
                 else:
                     raise  # Re-raise on final attempt
+    
+    def wait_and_get_dropdown_options_with_attributes(self, locator, value_attr='value', timeout=None):
+        """
+        Gets dropdown option elements and extracts their value and text attributes.
+        Handles stale element exceptions during element retrieval and attribute access.
+        
+        :param locator: Locator tuple for the dropdown option elements
+        :param value_attr: Attribute name to extract as 'value' (default: 'value')
+        :param timeout: Optional timeout (defaults to self.default_timeout)
+        :return: List of dictionaries with 'value' and 'text' keys
+        """
+        timeout = timeout if timeout else self.default_timeout
+        
+        for attempt in range(self.max_retries):
+            try:
+                options_elements = self.wait_until_elements_are_visible(locator, timeout=timeout)
+                value_and_text = []
+                for element in options_elements:
+                    # Re-check visibility to ensure element is not stale before accessing attributes
+                    self.wait_until_element_is_visible(element)
+                    value_and_text.append({
+                        'value': element.get_attribute(value_attr),
+                        'text': element.text
+                    })
+                return value_and_text
+            except StaleElementReferenceException:
+                if attempt < self.max_retries - 1:
+                    time.sleep(self.retry_delay)
+                    continue
+                else:
+                    raise  # Re-raise on final attempt
