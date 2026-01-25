@@ -1,9 +1,6 @@
 
-import time
-
 import pytest
 from ssqatest.src.pages.ProductPage import ProductPage
-from selenium.common.exceptions import StaleElementReferenceException
 
 
 # test data
@@ -43,15 +40,8 @@ class TestVariableProductOptionValues:
 
     @pytest.mark.tcid98
     def test_variable_product_values_of_color_options(self, go_to_pdp_setup):
-
-        # adding retry logic to deal with StaleElementReferenceException
-        for i in range(5):
-            try:
-                value_and_text = self.product_page.get_color_dropdown_options_values_and_text()
-                break
-            except StaleElementReferenceException:
-                time.sleep(1)
-                print("WARNING: StaleElementReferenceException. Sleeping for 1 second and retrying.")
+        # Retry logic is now handled in ProductPage.get_color_dropdown_options_values_and_text()
+        value_and_text = self.product_page.get_color_dropdown_options_values_and_text()
 
         # verify the 'values' are in the expected list
         # first element should have value of ''
@@ -66,15 +56,8 @@ class TestVariableProductOptionValues:
 
     @pytest.mark.tcid99
     def test_variable_product_values_of_logo_options(self, go_to_pdp_setup):
-
-        # adding retry logic to deal with StaleElementReferenceException
-        for i in range(5):
-            try:
-                value_and_text = self.product_page.get_logo_dropdown_options_values_and_text()
-                break
-            except StaleElementReferenceException:
-                time.sleep(1)
-                print("WARNING: StaleElementReferenceException. Sleeping for 1 second and retrying.")
+        # Retry logic is now handled in ProductPage.get_logo_dropdown_options_values_and_text()
+        value_and_text = self.product_page.get_logo_dropdown_options_values_and_text()
 
         # verify the 'values' are in the expected list
         # first element should have value of ''
@@ -92,28 +75,28 @@ class TestVariableProductOptionValues:
 
         color_to_select = 'Green'
         self.product_page.select_color_option_by_visible_text(color_to_select)
-        selected_option = self.product_page.get_selected_color_option()
+        selected_option_text = self.product_page.get_selected_color_option()
         # verify the selection was successful
-        assert selected_option.text == color_to_select, f"Expected '{color_to_select}' to be selected but found '{selected_option.text}'"
+        assert selected_option_text == color_to_select, f"Expected '{color_to_select}' to be selected but found '{selected_option_text}'"
 
         # click the reset and validate
         self.product_page.click_reset_variations_btn()
-        selected_option = self.product_page.get_selected_color_option()
-        assert selected_option.text == 'Choose an option', f"Clear selection button did not clear the color dropdown."
+        selected_option_text = self.product_page.get_selected_color_option()
+        assert selected_option_text == 'Choose an option', f"Clear selection button did not clear the color dropdown."
 
     @pytest.mark.tcid101
     def test_variable_product_clear_selection_btn_when_only_logo_is_selected(self, go_to_pdp_setup):
 
         logo_to_select = 'No'
         self.product_page.select_logo_option_by_visible_text(logo_to_select)
-        selected_option = self.product_page.get_selected_logo_option()
+        selected_option_text = self.product_page.get_selected_logo_option()
         # verify the selection was successful
-        assert selected_option.text == logo_to_select, f"Expected '{logo_to_select}' to be selected but found '{selected_option.text}'"
+        assert selected_option_text == logo_to_select, f"Expected '{logo_to_select}' to be selected but found '{selected_option_text}'"
 
         # click the reset and validate
         self.product_page.click_reset_variations_btn()
-        selected_option = self.product_page.get_selected_logo_option()
-        assert selected_option.text == 'Choose an option', f"Clear selection button did not clear the logo dropdown."
+        selected_option_text = self.product_page.get_selected_logo_option()
+        assert selected_option_text == 'Choose an option', f"Clear selection button did not clear the logo dropdown."
 
     @pytest.mark.tcid102
     def test_variable_product_clear_selection_btn_when_both_color_and_logo_are_selected(self, go_to_pdp_setup):
@@ -121,25 +104,25 @@ class TestVariableProductOptionValues:
         # select color
         color_to_select = 'Green'
         self.product_page.select_color_option_by_visible_text(color_to_select)
-        selected_option = self.product_page.get_selected_color_option()
+        selected_option_text = self.product_page.get_selected_color_option()
         # verify the selection was successful
-        assert selected_option.text == color_to_select, f"Expected '{color_to_select}' to be selected but found '{selected_option.text}'"
+        assert selected_option_text == color_to_select, f"Expected '{color_to_select}' to be selected but found '{selected_option_text}'"
 
         # select logo
         logo_to_select = 'No'
         self.product_page.select_logo_option_by_visible_text(logo_to_select)
-        selected_option = self.product_page.get_selected_logo_option()
+        selected_option_text = self.product_page.get_selected_logo_option()
         # verify the selection was successful
-        assert selected_option.text == logo_to_select, f"Expected '{logo_to_select}' to be selected but found '{selected_option.text}'"
+        assert selected_option_text == logo_to_select, f"Expected '{logo_to_select}' to be selected but found '{selected_option_text}'"
 
         # click the reset
         self.product_page.click_reset_variations_btn()
 
         # verify color is reset
-        selected_option = self.product_page.get_selected_color_option()
-        assert selected_option.text == 'Choose an option', f"Clear selection button did not clear the color dropdown."
+        selected_option_text = self.product_page.get_selected_color_option()
+        assert selected_option_text == 'Choose an option', f"Clear selection button did not clear the color dropdown."
 
         # verify logo is reset
-        selected_option = self.product_page.get_selected_logo_option()
-        assert selected_option.text == 'Choose an option', f"Clear selection button did not clear the logo dropdown."
+        selected_option_text = self.product_page.get_selected_logo_option()
+        assert selected_option_text == 'Choose an option', f"Clear selection button did not clear the logo dropdown."
 

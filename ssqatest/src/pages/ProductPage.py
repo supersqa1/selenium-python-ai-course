@@ -1,4 +1,5 @@
 import time
+from selenium.common.exceptions import StaleElementReferenceException
 
 from ssqatest.src.SeleniumExtended import SeleniumExtended
 from ssqatest.src.pages.locators.ProductPageLocators import ProductPageLocators
@@ -100,56 +101,152 @@ class ProductPage(ProductPageLocators):
 
 
     def get_color_dropdown_options_values_and_text(self):
-        options_elements = self.get_color_dropdown_options_elements()
-
-        value_and_text = []
-        for element in options_elements:
-            self.sl.wait_until_element_is_visible(element)
-            value_and_text.append({'value': element.get_attribute('value'), 'text': element.text})
-
-        return value_and_text
+        """
+        Gets color dropdown options with retry logic for stale elements.
+        Re-fetches elements on each retry to avoid stale element exceptions.
+        """
+        max_retries = 3
+        retry_delay = 0.5
+        
+        for attempt in range(max_retries):
+            try:
+                options_elements = self.get_color_dropdown_options_elements()
+                value_and_text = []
+                for element in options_elements:
+                    # Re-check visibility to ensure element is not stale
+                    self.sl.wait_until_element_is_visible(element)
+                    value_and_text.append({
+                        'value': element.get_attribute('value'),
+                        'text': element.text
+                    })
+                return value_and_text
+            except StaleElementReferenceException:
+                if attempt < max_retries - 1:
+                    time.sleep(retry_delay)
+                    continue
+                else:
+                    raise
 
     def get_logo_dropdown_options_values_and_text(self):
-        options_elements = self.get_logo_dropdown_options_elements()
-
-        value_and_text = []
-        for element in options_elements:
-            self.sl.wait_until_element_is_visible(element)
-            value_and_text.append({'value': element.get_attribute('value'), 'text': element.text})
-
-        return value_and_text
+        """
+        Gets logo dropdown options with retry logic for stale elements.
+        Re-fetches elements on each retry to avoid stale element exceptions.
+        """
+        max_retries = 3
+        retry_delay = 0.5
+        
+        for attempt in range(max_retries):
+            try:
+                options_elements = self.get_logo_dropdown_options_elements()
+                value_and_text = []
+                for element in options_elements:
+                    # Re-check visibility to ensure element is not stale
+                    self.sl.wait_until_element_is_visible(element)
+                    value_and_text.append({
+                        'value': element.get_attribute('value'),
+                        'text': element.text
+                    })
+                return value_and_text
+            except StaleElementReferenceException:
+                if attempt < max_retries - 1:
+                    time.sleep(retry_delay)
+                    continue
+                else:
+                    raise
 
     def select_color_option_by_visible_text(self, color):
-        color_dropdown = self.sl.wait_until_element_is_visible(self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_DROPDOWN)
-        select = Select(color_dropdown)
-        select.select_by_visible_text(color)
+        """
+        Selects a color option by visible text with retry logic for stale elements.
+        """
+        max_retries = 3
+        retry_delay = 0.5
+        
+        for attempt in range(max_retries):
+            try:
+                color_dropdown = self.sl.wait_until_element_is_visible(self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_DROPDOWN)
+                select = Select(color_dropdown)
+                select.select_by_visible_text(color)
+                return  # Success
+            except StaleElementReferenceException:
+                if attempt < max_retries - 1:
+                    time.sleep(retry_delay)
+                    continue
+                else:
+                    raise
 
     def select_logo_option_by_visible_text(self, logo_option):
-        logo_dropdown = self.sl.wait_until_element_is_visible(self.VARIABLE_PRODUCT_LOGO_ATTRIBUTE_DROPDOWN)
-        select = Select(logo_dropdown)
-        select.select_by_visible_text(logo_option)
+        """
+        Selects a logo option by visible text with retry logic for stale elements.
+        """
+        max_retries = 3
+        retry_delay = 0.5
+        
+        for attempt in range(max_retries):
+            try:
+                logo_dropdown = self.sl.wait_until_element_is_visible(self.VARIABLE_PRODUCT_LOGO_ATTRIBUTE_DROPDOWN)
+                select = Select(logo_dropdown)
+                select.select_by_visible_text(logo_option)
+                return  # Success
+            except StaleElementReferenceException:
+                if attempt < max_retries - 1:
+                    time.sleep(retry_delay)
+                    continue
+                else:
+                    raise
 
     def click_reset_variations_btn(self):
         self.sl.wait_and_click(self.RESET_VARIATIONS_BTN)
 
     def get_selected_color_option(self):
-        color_dropdown = self.sl.wait_until_element_is_visible(self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_DROPDOWN)
-        select = Select(color_dropdown)
-        return select.first_selected_option
+        """
+        Gets the text of the currently selected color option.
+        Returns text directly to avoid stale element issues.
+        Uses retry logic to handle stale elements during option selection.
+        """
+        max_retries = 3
+        retry_delay = 0.5
+        
+        for attempt in range(max_retries):
+            try:
+                color_dropdown = self.sl.wait_until_element_is_visible(self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_DROPDOWN)
+                select = Select(color_dropdown)
+                return select.first_selected_option.text
+            except StaleElementReferenceException:
+                if attempt < max_retries - 1:
+                    time.sleep(retry_delay)
+                    continue
+                else:
+                    raise
 
     def get_selected_logo_option(self):
-        logo_dropdown = self.sl.wait_until_element_is_visible(self.VARIABLE_PRODUCT_LOGO_ATTRIBUTE_DROPDOWN)
-        select = Select(logo_dropdown)
-        return select.first_selected_option
+        """
+        Gets the text of the currently selected logo option.
+        Returns text directly to avoid stale element issues.
+        Uses retry logic to handle stale elements during option selection.
+        """
+        max_retries = 3
+        retry_delay = 0.5
+        
+        for attempt in range(max_retries):
+            try:
+                logo_dropdown = self.sl.wait_until_element_is_visible(self.VARIABLE_PRODUCT_LOGO_ATTRIBUTE_DROPDOWN)
+                select = Select(logo_dropdown)
+                return select.first_selected_option.text
+            except StaleElementReferenceException:
+                if attempt < max_retries - 1:
+                    time.sleep(retry_delay)
+                    continue
+                else:
+                    raise
 
     def select_color_option_and_verify(self, color_to_select):
         self.select_color_option_by_visible_text(color_to_select)
-        selected_option = self.get_selected_color_option()
+        selected_option_text = self.get_selected_color_option()
         # verify the selection was successful
-        assert selected_option.text == color_to_select, f"Expected '{color_to_select}' to be selected but found '{selected_option.text}'"
+        assert selected_option_text == color_to_select, f"Expected '{color_to_select}' to be selected but found '{selected_option_text}'"
 
     def select_logo_option_and_verify(self, logo_to_select):
         self.select_logo_option_by_visible_text(logo_to_select)
-        selected_option = self.get_selected_logo_option()
+        selected_option_text = self.get_selected_logo_option()
         # verify the selection was successful
-        assert selected_option.text == logo_to_select, f"Expected '{logo_to_select}' to be selected but found '{selected_option.text}'"
+        assert selected_option_text == logo_to_select, f"Expected '{logo_to_select}' to be selected but found '{selected_option_text}'"
