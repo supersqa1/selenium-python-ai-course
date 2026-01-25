@@ -1,9 +1,6 @@
-import time
-
 from ssqatest.src.SeleniumExtended import SeleniumExtended
 from ssqatest.src.pages.locators.ProductPageLocators import ProductPageLocators
 from ssqatest.src.helpers.config_helpers import get_base_url
-from selenium.webdriver.support.ui import Select
 
 class ProductPage(ProductPageLocators):
 
@@ -100,56 +97,72 @@ class ProductPage(ProductPageLocators):
 
 
     def get_color_dropdown_options_values_and_text(self):
-        options_elements = self.get_color_dropdown_options_elements()
-
-        value_and_text = []
-        for element in options_elements:
-            self.sl.wait_until_element_is_visible(element)
-            value_and_text.append({'value': element.get_attribute('value'), 'text': element.text})
-
-        return value_and_text
+        """
+        Gets color dropdown options with value and text.
+        Retry logic is handled in SeleniumExtended.wait_and_get_dropdown_options_with_attributes().
+        """
+        return self.sl.wait_and_get_dropdown_options_with_attributes(
+            self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_OPTIONS
+        )
 
     def get_logo_dropdown_options_values_and_text(self):
-        options_elements = self.get_logo_dropdown_options_elements()
-
-        value_and_text = []
-        for element in options_elements:
-            self.sl.wait_until_element_is_visible(element)
-            value_and_text.append({'value': element.get_attribute('value'), 'text': element.text})
-
-        return value_and_text
+        """
+        Gets logo dropdown options with value and text.
+        Retry logic is handled in SeleniumExtended.wait_and_get_dropdown_options_with_attributes().
+        """
+        return self.sl.wait_and_get_dropdown_options_with_attributes(
+            self.VARIABLE_PRODUCT_LOGO_ATTRIBUTE_OPTIONS
+        )
 
     def select_color_option_by_visible_text(self, color):
-        color_dropdown = self.sl.wait_until_element_is_visible(self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_DROPDOWN)
-        select = Select(color_dropdown)
-        select.select_by_visible_text(color)
+        """
+        Selects a color option by visible text.
+        Retry logic is handled in SeleniumExtended.wait_and_select_dropdown().
+        """
+        self.sl.wait_and_select_dropdown(
+            self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_DROPDOWN,
+            to_select=color,
+            select_by='visible_text'
+        )
 
     def select_logo_option_by_visible_text(self, logo_option):
-        logo_dropdown = self.sl.wait_until_element_is_visible(self.VARIABLE_PRODUCT_LOGO_ATTRIBUTE_DROPDOWN)
-        select = Select(logo_dropdown)
-        select.select_by_visible_text(logo_option)
+        """
+        Selects a logo option by visible text.
+        Retry logic is handled in SeleniumExtended.wait_and_select_dropdown().
+        """
+        self.sl.wait_and_select_dropdown(
+            self.VARIABLE_PRODUCT_LOGO_ATTRIBUTE_DROPDOWN,
+            to_select=logo_option,
+            select_by='visible_text'
+        )
 
     def click_reset_variations_btn(self):
         self.sl.wait_and_click(self.RESET_VARIATIONS_BTN)
 
     def get_selected_color_option(self):
-        color_dropdown = self.sl.wait_until_element_is_visible(self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_DROPDOWN)
-        select = Select(color_dropdown)
-        return select.first_selected_option
+        """
+        Gets the text of the currently selected color option.
+        Returns text directly to avoid stale element issues.
+        Retry logic is handled in SeleniumExtended.wait_and_get_selected_option_text().
+        """
+        return self.sl.wait_and_get_selected_option_text(self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_DROPDOWN)
 
     def get_selected_logo_option(self):
-        logo_dropdown = self.sl.wait_until_element_is_visible(self.VARIABLE_PRODUCT_LOGO_ATTRIBUTE_DROPDOWN)
-        select = Select(logo_dropdown)
-        return select.first_selected_option
+        """
+        Gets the text of the currently selected logo option.
+        Returns text directly to avoid stale element issues.
+        Retry logic is handled in SeleniumExtended.wait_and_get_selected_option_text().
+        """
+        return self.sl.wait_and_get_selected_option_text(self.VARIABLE_PRODUCT_LOGO_ATTRIBUTE_DROPDOWN)
 
     def select_color_option_and_verify(self, color_to_select):
         self.select_color_option_by_visible_text(color_to_select)
-        selected_option = self.get_selected_color_option()
+        selected_option_text = self.get_selected_color_option()
         # verify the selection was successful
-        assert selected_option.text == color_to_select, f"Expected '{color_to_select}' to be selected but found '{selected_option.text}'"
+        assert selected_option_text == color_to_select, f"Expected '{color_to_select}' to be selected but found '{selected_option_text}'"
 
     def select_logo_option_and_verify(self, logo_to_select):
         self.select_logo_option_by_visible_text(logo_to_select)
-        selected_option = self.get_selected_logo_option()
+        selected_option_text = self.get_selected_logo_option()
         # verify the selection was successful
-        assert selected_option.text == logo_to_select, f"Expected '{logo_to_select}' to be selected but found '{selected_option.text}'"
+        assert selected_option_text == logo_to_select, f"Expected '{logo_to_select}' to be selected but found '{selected_option_text}'"
