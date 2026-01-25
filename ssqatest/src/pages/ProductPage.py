@@ -1,10 +1,6 @@
-import time
-from selenium.common.exceptions import StaleElementReferenceException
-
 from ssqatest.src.SeleniumExtended import SeleniumExtended
 from ssqatest.src.pages.locators.ProductPageLocators import ProductPageLocators
 from ssqatest.src.helpers.config_helpers import get_base_url
-from selenium.webdriver.support.ui import Select
 
 class ProductPage(ProductPageLocators):
 
@@ -156,43 +152,25 @@ class ProductPage(ProductPageLocators):
 
     def select_color_option_by_visible_text(self, color):
         """
-        Selects a color option by visible text with retry logic for stale elements.
+        Selects a color option by visible text.
+        Retry logic is handled in SeleniumExtended.wait_and_select_dropdown().
         """
-        max_retries = 3
-        retry_delay = 0.5
-        
-        for attempt in range(max_retries):
-            try:
-                color_dropdown = self.sl.wait_until_element_is_visible(self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_DROPDOWN)
-                select = Select(color_dropdown)
-                select.select_by_visible_text(color)
-                return  # Success
-            except StaleElementReferenceException:
-                if attempt < max_retries - 1:
-                    time.sleep(retry_delay)
-                    continue
-                else:
-                    raise
+        self.sl.wait_and_select_dropdown(
+            self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_DROPDOWN,
+            to_select=color,
+            select_by='visible_text'
+        )
 
     def select_logo_option_by_visible_text(self, logo_option):
         """
-        Selects a logo option by visible text with retry logic for stale elements.
+        Selects a logo option by visible text.
+        Retry logic is handled in SeleniumExtended.wait_and_select_dropdown().
         """
-        max_retries = 3
-        retry_delay = 0.5
-        
-        for attempt in range(max_retries):
-            try:
-                logo_dropdown = self.sl.wait_until_element_is_visible(self.VARIABLE_PRODUCT_LOGO_ATTRIBUTE_DROPDOWN)
-                select = Select(logo_dropdown)
-                select.select_by_visible_text(logo_option)
-                return  # Success
-            except StaleElementReferenceException:
-                if attempt < max_retries - 1:
-                    time.sleep(retry_delay)
-                    continue
-                else:
-                    raise
+        self.sl.wait_and_select_dropdown(
+            self.VARIABLE_PRODUCT_LOGO_ATTRIBUTE_DROPDOWN,
+            to_select=logo_option,
+            select_by='visible_text'
+        )
 
     def click_reset_variations_btn(self):
         self.sl.wait_and_click(self.RESET_VARIATIONS_BTN)
@@ -201,43 +179,17 @@ class ProductPage(ProductPageLocators):
         """
         Gets the text of the currently selected color option.
         Returns text directly to avoid stale element issues.
-        Uses retry logic to handle stale elements during option selection.
+        Retry logic is handled in SeleniumExtended.wait_and_get_selected_option_text().
         """
-        max_retries = 3
-        retry_delay = 0.5
-        
-        for attempt in range(max_retries):
-            try:
-                color_dropdown = self.sl.wait_until_element_is_visible(self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_DROPDOWN)
-                select = Select(color_dropdown)
-                return select.first_selected_option.text
-            except StaleElementReferenceException:
-                if attempt < max_retries - 1:
-                    time.sleep(retry_delay)
-                    continue
-                else:
-                    raise
+        return self.sl.wait_and_get_selected_option_text(self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_DROPDOWN)
 
     def get_selected_logo_option(self):
         """
         Gets the text of the currently selected logo option.
         Returns text directly to avoid stale element issues.
-        Uses retry logic to handle stale elements during option selection.
+        Retry logic is handled in SeleniumExtended.wait_and_get_selected_option_text().
         """
-        max_retries = 3
-        retry_delay = 0.5
-        
-        for attempt in range(max_retries):
-            try:
-                logo_dropdown = self.sl.wait_until_element_is_visible(self.VARIABLE_PRODUCT_LOGO_ATTRIBUTE_DROPDOWN)
-                select = Select(logo_dropdown)
-                return select.first_selected_option.text
-            except StaleElementReferenceException:
-                if attempt < max_retries - 1:
-                    time.sleep(retry_delay)
-                    continue
-                else:
-                    raise
+        return self.sl.wait_and_get_selected_option_text(self.VARIABLE_PRODUCT_LOGO_ATTRIBUTE_DROPDOWN)
 
     def select_color_option_and_verify(self, color_to_select):
         self.select_color_option_by_visible_text(color_to_select)

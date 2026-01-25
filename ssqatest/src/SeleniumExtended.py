@@ -119,22 +119,58 @@ class SeleniumExtended:
             EC.url_contains(url_substring)
         )
 
-    def wait_and_select_dropdown(self, locator, to_select, select_by='visible_text'):
+    def wait_and_select_dropdown(self, locator, to_select, select_by='visible_text', timeout=None):
         """
-
-        :param locator:
-        :param to_select:
-        :param select_by: Options are 'visible_text', 'index', or value 'value'
-        :return:
+        Selects an option from a dropdown with retry logic for stale elements.
+        
+        :param locator: Locator tuple for the dropdown element
+        :param to_select: Value to select (text, index, or value depending on select_by)
+        :param select_by: Options are 'visible_text', 'index', or 'value'
+        :param timeout: Optional timeout (defaults to self.default_timeout)
+        :return: None
         """
-
-        select_element = self.wait_until_element_is_visible(locator)
-        select = Select(select_element)
-        if select_by.lower() == 'visible_text':
-            select.select_by_visible_text(to_select)
-        elif select_by.lower() == 'index':
-            select.select_by_index(to_select)
-        elif select_by.lower() == 'value':
-            select.select_by_value(to_select)
-        else:
-            raise Exception(f"Invalid option for 'to_select' parameter. Valid values are 'visible_text', 'index', or value 'value'.")
+        timeout = timeout if timeout else self.default_timeout
+        
+        for attempt in range(self.max_retries):
+            try:
+                select_element = self.wait_until_element_is_visible(locator, timeout=timeout)
+                select = Select(select_element)
+                if select_by.lower() == 'visible_text':
+                    select.select_by_visible_text(to_select)
+                elif select_by.lower() == 'index':
+                    select.select_by_index(to_select)
+                elif select_by.lower() == 'value':
+                    select.select_by_value(to_select)
+                else:
+                    raise ValueError(f"Invalid option for 'select_by' parameter. Valid values are 'visible_text', 'index', or 'value'.")
+                return  # Success
+            except StaleElementReferenceException:
+                if attempt < self.max_retries - 1:
+                    time.sleep(self.retry_delay)
+                    continue
+                else:
+                    raise  # Re-raise on final attempt
+    
+    def wait_and_get_selected_option_text(self, locator, timeout=None):
+        """
+        Gets the text of the currently selected option in a dropdown.
+        Returns text directly to avoid stale element issues.
+        Includes retry logic for stale elements.
+        
+        :param locator: Locator tuple for the dropdown element
+        :param timeout: Optional timeout (defaults to self.default_timeout)
+        :return: Text of the selected option (string)
+        """
+        timeout = timeout if timeout else self.default_timeout
+        
+        for attempt in range(self.max_retries):
+            try:
+                select_element = self.wait_until_element_is_visible(locator, timeout=timeout)
+                select = Select(select_element)
+                return select.first_selected_option.text
+            except StaleElementReferenceException:
+                if attempt < self.max_retries - 1:
+                    time.sleep(self.retry_delay)
+                    continue
+                else:
+                    raise  # Re-raise on final attempt
