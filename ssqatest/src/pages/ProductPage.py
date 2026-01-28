@@ -20,7 +20,8 @@ class ProductPage(ProductPageLocators):
 
     def get_url_of_displayed_main_image(self):
         image_elm = self.sl.wait_until_element_is_visible(self.PRODUCT_IMAGE_MAIN)
-        src = image_elm.get_attribute('data-src')
+        # Try data-src first (lazy loading), fallback to src if already loaded
+        src = image_elm.get_attribute('data-src') or image_elm.get_attribute('src')
         return src
 
     def get_url_of_displayed_alternate_images(self):
@@ -44,8 +45,8 @@ class ProductPage(ProductPageLocators):
         return self.sl.wait_until_element_is_visible(self.ADD_TO_CART_BUTTON)
 
     def click_add_to_cart_button(self):
-        add_cart_btn = self.get_add_to_cart_button_element()
-        add_cart_btn.click()
+        # Use wait_and_click which handles scroll and click interception
+        self.sl.wait_and_click(self.ADD_TO_CART_BUTTON)
 
     def get_view_cart_btn_on_add_to_cart_success_message_box(self):
         return self.sl.wait_until_element_is_visible(self.VIEW_CART_BTN_IN_SUCCESS_MESSAGE)

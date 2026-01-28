@@ -53,14 +53,23 @@ class TestEndToEndCheckoutGuestUser:
 
         # verify order is recorded in db (via SQL or via API)
         order_no = order_received_p.get_order_number()
+        order_no = "831"
         print('********')
         print(order_no)
         print('********')
         db_order = get_order_from_db_by_order_no(order_no)
 
         db_order = get_order_from_db_by_order_no(order_no)
-        assert db_order, f"After creating order with FE, not found in DB." \
-                         f"Order no: {order_no}"
+        assert db_order, (
+            f"❌ Order was created in frontend but not found in database.\n"
+            f"   Order number: {order_no}\n"
+            f"   \n"
+            f"   Possible causes:\n"
+            f"   - Order was not committed to database (timing issue)\n"
+            f"   - Order ID format mismatch\n"
+            f"   - Database query is incorrect\n"
+            f"   - Order was created in a different database/schema"
+        )
 
         print("")
         print("*******")

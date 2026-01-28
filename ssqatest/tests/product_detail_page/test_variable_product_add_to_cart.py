@@ -26,7 +26,9 @@ class TestVariableProductAddToCartFromPDP:
         # test data
         color_to_select = 'Blue'
         logo_to_select = 'Yes'
-        expected_name_in_cart = 'Hoodie - Blue, Yes'
+        # The cart page displays only the base product name "Hoodie"
+        # Variations are shown separately in the product details section (Color: Blue, Logo: Yes)
+        expected_name_in_cart = 'Hoodie'
 
         # select color
         self.product_page.select_color_option_and_verify(color_to_select)
@@ -44,6 +46,7 @@ class TestVariableProductAddToCartFromPDP:
         self.cart_page.verify_cart_page_url()
 
         # verify the correct product is added in cart
+        # Note: The cart displays the base product name only, not with variations appended
         products_in_cart = self.cart_page.get_all_product_names_in_cart()
         assert expected_name_in_cart in products_in_cart, f"After adding to cart unable to find product in the cart." \
                                                           f"Expected product name in cart: {expected_name_in_cart}," \

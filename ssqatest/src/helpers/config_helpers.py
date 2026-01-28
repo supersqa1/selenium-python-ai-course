@@ -108,21 +108,46 @@ def get_database_credentials():
             f"   3. Or create a .env file with these variables"
         )
 
-    if env == 'test':
-        db_host = '127.0.0.1'
-        db_port = 8889
-    elif env == 'prod':
-        db_host = 'demostore.supersqa.com'
-        db_port = 3306
+    # Check if DB_HOST and DB_PORT are explicitly set (takes precedence over ENV defaults)
+    db_host = os.environ.get("DB_HOST")
+    db_port = os.environ.get("DB_PORT")
+    
+    if db_host and db_port:
+        # Use explicit configuration (ENV is ignored when DB_HOST/DB_PORT are set)
+        try:
+            db_port = int(db_port)
+        except ValueError:
+            raise ValueError(
+                f"❌ Invalid DB_PORT value: '{db_port}'\n"
+                f"   DB_PORT must be a valid integer (e.g., 3306, 8889)"
+            )
+        # Debug: Show that explicit config is being used
+        print(f"🔍 Using explicit database configuration: {db_host}:{db_port} (ENV={env} is ignored)")
     else:
-        raise ValueError(
-            f"❌ Unknown environment: '{env}'\n"
-            f"   Valid environments are: 'test', 'prod'\n"
-            f"   Set via: export ENV=test (defaults to 'test' if not set)"
-        )
+        # Fall back to ENV-based defaults (backward compatibility)
+        if env == 'test':
+            db_host = '127.0.0.1'
+            db_port = 8889
+        elif env == 'prod':
+            db_host = 'demostore.supersqa.com'
+            db_port = 3306
+        else:
+            raise ValueError(
+                f"❌ Unknown environment: '{env}'\n"
+                f"   Valid environments are: 'test', 'prod'\n"
+                f"   Set via: export ENV=test (defaults to 'test' if not set)\n"
+                f"   Or set DB_HOST and DB_PORT explicitly to override ENV defaults"
+            )
+        # Debug: Show that ENV defaults are being used
+        print(f"🔍 Using ENV-based database configuration: {db_host}:{db_port} (ENV={env})")
+
+    # Get database name from environment, fallback to GenericConfigs for backward compatibility
+    from ssqatest.src.configs.generic_configs import GenericConfigs
+    db_name = os.environ.get("DB_NAME") or GenericConfigs.DATABASE_SCHEMA
 
     db_info = {"db_host": db_host, "db_port": db_port,
-               "db_user": db_user, "db_password": db_password}
+               "db_user": db_user, "db_password": db_password,
+               "db_name": db_name}
 
     return db_info
 
