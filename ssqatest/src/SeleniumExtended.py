@@ -34,15 +34,31 @@ class SeleniumExtended:
     def wait_and_click(self, locator, timeout=None):
         timeout = timeout if timeout else self.default_timeout
         
+        from selenium.common.exceptions import ElementClickInterceptedException
+        
         for attempt in range(self.max_retries):
             try:
                 element = WebDriverWait(self.driver, timeout).until(
                     EC.element_to_be_clickable(locator)
                 )
+                # Scroll element into view to avoid click interception
+                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
+                time.sleep(0.2)  # Brief pause after scroll
                 element.click()
                 return  # Success
-            except StaleElementReferenceException:
+            except (StaleElementReferenceException, ElementClickInterceptedException) as e:
                 if attempt < self.max_retries - 1:
+                    # Try JavaScript click as fallback for intercepted elements
+                    if isinstance(e, ElementClickInterceptedException):
+                        try:
+                            element = WebDriverWait(self.driver, timeout).until(
+                                EC.presence_of_element_located(locator)
+                            )
+                            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
+                            self.driver.execute_script("arguments[0].click();", element)
+                            return  # Success with JS click
+                        except:
+                            pass
                     time.sleep(self.retry_delay)
                     continue
                 else:

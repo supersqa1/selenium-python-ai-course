@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 class ProductPageLocators:
 
     PRODUCT_TITLE = (By.CSS_SELECTOR, 'div.entry-summary h1.product_title.entry-title')
-    PRODUCT_IMAGE_MAIN = (By.CSS_SELECTOR, 'div.woocommerce-product-gallery.images figure img.wp-post-image')
+    PRODUCT_IMAGE_MAIN = (By.CSS_SELECTOR, 'div.woocommerce-product-gallery__image img')
     PRODUCT_ALTERNATE_IMAGES = (By.CSS_SELECTOR, 'div.woocommerce-product-gallery.images ol.flex-control-thumbs li img')
     PRODUCT_TYPE_TEXT = (By.CSS_SELECTOR, 'div.entry-summary div.woocommerce-product-details__short-description')
     PRODUCT_PRICE = (By.CSS_SELECTOR, 'div.entry-summary p.price')
@@ -19,7 +19,7 @@ class ProductPageLocators:
     RELATED_PRODUCTS_LIST = (By.CSS_SELECTOR, 'section.related.products ul li.type-product')
     LEFT_NAV_TABS = (By.CSS_SELECTOR, 'div.woocommerce-tabs ul.tabs.wc-tabs li')
     VARIABLE_PRODUCT_COLOR_ATTRIBUTE_LABEL = (By.CSS_SELECTOR, 'table.variations tr th.label label[for="pa_color"]')
-    VARIABLE_PRODUCT_LOGO_ATTRIBUTE_LABEL = (By.CSS_SELECTOR, 'table.variations tr th.label label[for="logo"]')
+    VARIABLE_PRODUCT_LOGO_ATTRIBUTE_LABEL = (By.CSS_SELECTOR, 'table.variations tr th.label label[for="logo"], table.variations tr th.label label[for="attribute_logo"]')
     VARIABLE_PRODUCT_COLOR_ATTRIBUTE_DROPDOWN = (By.CSS_SELECTOR, 'table.variations tr select[name="attribute_pa_color"]')
     VARIABLE_PRODUCT_COLOR_ATTRIBUTE_OPTIONS = (By.CSS_SELECTOR, 'table.variations tr select[name="attribute_pa_color"] option')
     VARIABLE_PRODUCT_LOGO_ATTRIBUTE_OPTIONS = (By.CSS_SELECTOR, 'table.variations tr select[name="attribute_logo"] option')
