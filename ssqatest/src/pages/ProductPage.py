@@ -67,6 +67,11 @@ class ProductPage(ProductPageLocators):
     def get_displayed_product_description(self):
         return self.sl.wait_and_get_text(self.PRODUCT_DESCRIPTION)
 
+    def get_displayed_product_description_full(self):
+        """All description paragraphs joined (matches API HTML stripped with no space between tags)."""
+        elements = self.sl.wait_and_get_elements(self.PRODUCT_DESCRIPTION)
+        return "".join(elem.text for elem in elements)
+
     def get_displayed_product_description_header(self):
         return self.sl.wait_and_get_text(self.PRODUCT_DESCRIPTION_HEADER)
 

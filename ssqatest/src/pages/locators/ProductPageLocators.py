@@ -8,7 +8,8 @@ class ProductPageLocators:
     PRODUCT_ALTERNATE_IMAGES = (By.CSS_SELECTOR, 'div.woocommerce-product-gallery.images ol.flex-control-thumbs li img')
     PRODUCT_TYPE_TEXT = (By.CSS_SELECTOR, 'div.entry-summary div.woocommerce-product-details__short-description')
     PRODUCT_PRICE = (By.CSS_SELECTOR, 'div.entry-summary p.price')
-    ADD_TO_CART_BUTTON = (By.CSS_SELECTOR, 'div[class*="add-to-cart"] button[class*="add_to_cart_button"][type="submit"]')
+    # Works for both simple (single_add_to_cart_button) and variable (add_to_cart_button) product pages
+    ADD_TO_CART_BUTTON = (By.CSS_SELECTOR, 'form.cart button[type="submit"]')
     VIEW_CART_BTN_IN_SUCCESS_MESSAGE = (By.CSS_SELECTOR, 'div.woocommerce-message[role="alert"] a.button.wc-forward')
     PRODUCT_PAGE_QUANTITY_FIELD = (By.CSS_SELECTOR, 'div[class*="add-to-cart"] div.quantity input.input-text.qty')
     PRODUCT_PAGE_SKU_AND_LABEL = (By.CSS_SELECTOR, 'div.product_meta span.sku_wrapper')
