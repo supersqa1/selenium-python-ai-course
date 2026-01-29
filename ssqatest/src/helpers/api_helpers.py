@@ -74,6 +74,41 @@ def delete_coupon_by_coupon_code(coupon_code):
     rs_api = api_obj.delete(f"coupons/{coupon_id}", params={"force": True})
     assert rs_api.status_code == 200, f"Failed to delete coupon via api: coupon code: {coupon_code}"
 
+def get_product_by_slug(slug):
+    """
+    Fetches a single product by slug from the WooCommerce API.
+    Used as source-of-truth for PDP tests (name, images, SKU, etc.).
+    :param slug: Product slug (e.g. 'beanie', 'hoodie').
+    :return: Product dict from API.
+    """
+    api_obj = create_api_object()
+    rs_api = api_obj.get('products', params={'slug': slug})
+    assert rs_api.status_code == 200, (
+        f"Failed to get product by slug '{slug}'. Status: {rs_api.status_code}. Response: {rs_api.text}"
+    )
+    products = rs_api.json()
+    assert len(products) > 0, (
+        f"No product found with slug '{slug}'. API returned empty list."
+    )
+    return products[0]
+
+
+def update_product(product_id, data):
+    """
+    Updates a product via WooCommerce API (PUT).
+    :param product_id: Product ID (int).
+    :param data: Dict of fields to update (e.g. {"regular_price": "20", "sale_price": "18"}).
+                 Use sale_price="" to remove sale.
+    :return: Updated product dict from API.
+    """
+    api_obj = create_api_object()
+    rs_api = api_obj.put(f"products/{product_id}", data)
+    assert rs_api.status_code == 200, (
+        f"Failed to update product {product_id}. Status: {rs_api.status_code}. Response: {rs_api.text}"
+    )
+    return rs_api.json()
+
+
 def get_random_products(qty=1, **kwargs):
     """
     Gets random products using the 'products' api.
