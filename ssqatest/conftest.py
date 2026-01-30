@@ -24,24 +24,19 @@ def init_driver(request):
 
     browser = os.environ.get('BROWSER', None)
     if not browser:
+        supported_list = ", ".join(supported_browsers)
         raise EnvironmentError(
-            "❌ Missing required environment variable: BROWSER\n"
-            "   This is required for all tests.\n"
-            "   \n"
-            "   To fix:\n"
-            "   1. Source the environment file: source env.sh\n"
-            "   2. Or set manually: export BROWSER=chrome\n"
-            "   \n"
-            f"   Supported browsers: {', '.join(supported_browsers)}"
+            "Missing required environment variable: BROWSER. "
+            "Source env.sh or set export BROWSER=chrome. "
+            "Supported browsers: {}".format(supported_list)
         )
 
     browser = browser.lower()
     if browser not in supported_browsers:
         raise ValueError(
-            f"❌ Unsupported browser: '{browser}'\n"
-            f"   \n"
-            f"   Supported browsers: {', '.join(supported_browsers)}\n"
-            f"   Set via: export BROWSER=chrome (or one of the supported options)"
+            "Unsupported browser: '{}'. Supported: {}. Set via: export BROWSER=chrome".format(
+                browser, ", ".join(supported_browsers)
+            )
         )
 
     if browser in ('chrome', 'ch'):

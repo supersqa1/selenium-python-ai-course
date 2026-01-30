@@ -11,7 +11,8 @@ class ProductPageLocators:
     # Works for both simple (single_add_to_cart_button) and variable (add_to_cart_button) product pages
     ADD_TO_CART_BUTTON = (By.CSS_SELECTOR, 'form.cart button[type="submit"]')
     VIEW_CART_BTN_IN_SUCCESS_MESSAGE = (By.CSS_SELECTOR, 'div.woocommerce-message[role="alert"] a.button.wc-forward')
-    PRODUCT_PAGE_QUANTITY_FIELD = (By.CSS_SELECTOR, 'div[class*="add-to-cart"] div.quantity input.input-text.qty')
+    # Works for both simple (form.cart) and variable (div.add-to-cart) product pages
+    PRODUCT_PAGE_QUANTITY_FIELD = (By.CSS_SELECTOR, 'form.cart div.quantity input.input-text.qty')
     PRODUCT_PAGE_SKU_AND_LABEL = (By.CSS_SELECTOR, 'div.product_meta span.sku_wrapper')
     PRODUCT_PAGE_CATEGORY_AND_LABEL = (By.CSS_SELECTOR, 'div.product_meta span.posted_in')
     PRODUCT_DESCRIPTION = (By.CSS_SELECTOR, 'div#tab-description p')
@@ -19,6 +20,12 @@ class ProductPageLocators:
     RELATED_PRODUCTS_SECTION_HEADER = (By.CSS_SELECTOR, 'section.related.products > h2')
     RELATED_PRODUCTS_LIST = (By.CSS_SELECTOR, 'section.related.products ul li.type-product')
     LEFT_NAV_TABS = (By.CSS_SELECTOR, 'div.woocommerce-tabs ul.tabs.wc-tabs li')
+    ADDITIONAL_INFO_TAB_LINK = (By.CSS_SELECTOR, 'div.woocommerce-tabs ul.tabs li a[href="#tab-additional_information"]')
+    ADDITIONAL_INFO_CONTENT = (By.CSS_SELECTOR, 'div#tab-additional_information')
+    # Breadcrumb: WooCommerce uses nav.woocommerce-breadcrumb
+    BREADCRUMB = (By.CSS_SELECTOR, 'nav.woocommerce-breadcrumb')
+    # Sale badge (WooCommerce .onsale); main product only – filter out section.related in code
+    SALE_BADGE = (By.CSS_SELECTOR, 'span.onsale')
     VARIABLE_PRODUCT_COLOR_ATTRIBUTE_LABEL = (By.CSS_SELECTOR, 'table.variations tr th.label label[for="pa_color"]')
     VARIABLE_PRODUCT_LOGO_ATTRIBUTE_LABEL = (By.CSS_SELECTOR, 'table.variations tr th.label label[for="logo"], table.variations tr th.label label[for="attribute_logo"]')
     VARIABLE_PRODUCT_COLOR_ATTRIBUTE_DROPDOWN = (By.CSS_SELECTOR, 'table.variations tr select[name="attribute_pa_color"]')
