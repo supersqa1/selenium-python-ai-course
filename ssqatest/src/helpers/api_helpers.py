@@ -109,6 +109,61 @@ def update_product(product_id, data):
     return rs_api.json()
 
 
+def create_product_review(product_id, reviewer, review, rating, reviewer_email=None):
+    """
+    Creates a product review via WooCommerce REST API (wc/v3).
+    :param product_id: Product ID (int).
+    :param reviewer: Reviewer display name.
+    :param review: Review content (text).
+    :param rating: Star rating 1-5 (int).
+    :param reviewer_email: Optional reviewer email (some stores require it).
+    :return: Created review dict from API.
+    """
+    api_obj = create_api_object()
+    payload = {
+        "product_id": product_id,
+        "reviewer": reviewer,
+        "review": review,
+        "rating": int(rating),
+    }
+    if reviewer_email:
+        payload["reviewer_email"] = reviewer_email
+    rs_api = api_obj.post("products/reviews", data=payload)
+    assert rs_api.status_code == 201, (
+        f"Failed to create review for product {product_id}. "
+        f"Status: {rs_api.status_code}. Response: {rs_api.text}"
+    )
+    return rs_api.json()
+
+
+def get_product_reviews(product_id):
+    """
+    Fetches all reviews for a product from the WooCommerce API.
+    :param product_id: Product ID (int).
+    :return: List of review dicts.
+    """
+    api_obj = create_api_object()
+    rs_api = api_obj.get("products/reviews", params={"product": product_id, "per_page": 100})
+    assert rs_api.status_code == 200, (
+        f"Failed to get reviews for product {product_id}. Status: {rs_api.status_code}. Response: {rs_api.text}"
+    )
+    return rs_api.json()
+
+
+def delete_product_review(review_id):
+    """
+    Deletes a product review via WooCommerce REST API (wc/v3).
+    :param review_id: Review ID (int).
+    :return: Response dict (typically {"deleted": true, "previous": {...}}).
+    """
+    api_obj = create_api_object()
+    rs_api = api_obj.delete(f"products/reviews/{review_id}", params={"force": True})
+    assert rs_api.status_code == 200, (
+        f"Failed to delete review {review_id}. Status: {rs_api.status_code}. Response: {rs_api.text}"
+    )
+    return rs_api.json()
+
+
 def get_random_products(qty=1, **kwargs):
     """
     Gets random products using the 'products' api.

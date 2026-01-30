@@ -1,3 +1,4 @@
+from selenium.webdriver.common.by import By
 from ssqatest.src.SeleniumExtended import SeleniumExtended
 from ssqatest.src.pages.locators.ProductPageLocators import ProductPageLocators
 from ssqatest.src.helpers.config_helpers import get_base_url
@@ -144,6 +145,190 @@ class ProductPage(ProductPageLocators):
     def get_additional_information_content_text(self):
         """Returns the visible text of the Additional information tab content."""
         return self.sl.wait_and_get_text(self.ADDITIONAL_INFO_CONTENT)
+
+    # --- Reviews tab ---
+    def click_reviews_tab(self):
+        """Clicks the Reviews tab so its content is visible."""
+        self.sl.wait_and_click(self.REVIEWS_TAB_LINK)
+
+    def get_reviews_tab_content_text(self):
+        """Returns the visible text of the Reviews tab content (empty state + form).
+        Caller must load the product page and open the Reviews tab first."""
+        return self.sl.wait_and_get_text(self.REVIEWS_TAB_CONTENT)
+
+    def is_reviews_tab_content_visible(self):
+        """Returns True if the Reviews tab content panel is visible."""
+        try:
+            el = self.sl.wait_until_element_is_visible(self.REVIEWS_TAB_CONTENT, timeout=5)
+            return el.is_displayed()
+        except Exception:
+            return False
+
+    def is_reviews_form_visible(self):
+        """Returns True if the review comment form is visible."""
+        try:
+            el = self.sl.wait_until_element_is_visible(self.REVIEWS_FORM, timeout=3)
+            return el.is_displayed()
+        except Exception:
+            return False
+
+    def is_reviews_rating_visible(self):
+        """Returns True if rating selector (dropdown or stars) is visible."""
+        try:
+            # WooCommerce may use p.stars (star links) or select#rating
+            el = self.sl.wait_until_element_is_visible(self.REVIEWS_RATING_SELECT, timeout=2)
+            return el.is_displayed()
+        except Exception:
+            # TODO: may be use the correct locator the first time
+            try:
+                stars = self.driver.find_elements(By.CSS_SELECTOR, "div#tab-reviews p.stars")
+                return bool(stars and stars[0].is_displayed())
+            except Exception:
+                return False
+
+    def is_reviews_comment_textarea_visible(self):
+        try:
+                el = self.sl.wait_until_element_is_visible(self.REVIEWS_COMMENT_TEXTAREA, timeout=2)
+                return el.is_displayed()
+        except Exception:
+            return False
+
+    def is_reviews_author_input_visible(self):
+        try:
+            el = self.sl.wait_until_element_is_visible(self.REVIEWS_AUTHOR_INPUT, timeout=2)
+            return el.is_displayed()
+        except Exception:
+            return False
+
+    def is_reviews_email_input_visible(self):
+        try:
+            el = self.sl.wait_until_element_is_visible(self.REVIEWS_EMAIL_INPUT, timeout=2)
+            return el.is_displayed()
+        except Exception:
+            return False
+
+    def is_reviews_submit_button_visible(self):
+        try:
+            el = self.sl.wait_until_element_is_visible(self.REVIEWS_SUBMIT_BUTTON, timeout=2)
+            return el.is_displayed()
+        except Exception:
+            return False
+
+    def is_reviews_save_details_checkbox_visible(self):
+        """Returns True if 'Save my name, email, and website...' checkbox is visible."""
+        try:
+            el = self.sl.wait_until_element_is_visible(self.REVIEWS_SAVE_DETAILS_CHECKBOX, timeout=2)
+            return el.is_displayed()
+        except Exception:
+            return False
+
+    def get_reviews_save_details_checkbox_label_text(self):
+        """Returns the label text for the save-details checkbox (for assertion)."""
+        try:
+            consent = self.driver.find_elements(By.CSS_SELECTOR, "div#tab-reviews .comment-form-cookies-consent")
+            if consent and consent[0].is_displayed():
+                return consent[0].text.strip()
+            return ""
+        except Exception:
+            return ""
+
+    def fill_review_rating(self, value):
+        """Set rating to 1-5. Tries select#rating first, then star links (p.stars a.star-N)."""
+        rating = int(value)
+        if rating < 1 or rating > 5:
+            return
+        try:
+            el = self.sl.wait_until_element_is_visible(self.REVIEWS_RATING_SELECT, timeout=2)
+            from selenium.webdriver.support.ui import Select
+            Select(el).select_by_value(str(rating))
+            return
+        except Exception:
+            pass
+        try:
+            star = self.driver.find_element(By.CSS_SELECTOR, f"div#tab-reviews p.stars a.star-{rating}")
+            if star.is_displayed():
+                star.click()
+        except Exception:
+            pass
+
+    def fill_review_comment(self, text):
+        self.sl.wait_until_element_is_visible(self.REVIEWS_COMMENT_TEXTAREA)
+        self.sl.wait_and_input_text(self.REVIEWS_COMMENT_TEXTAREA, text)
+
+    def fill_review_author(self, text):
+        self.sl.wait_until_element_is_visible(self.REVIEWS_AUTHOR_INPUT)
+        self.sl.wait_and_input_text(self.REVIEWS_AUTHOR_INPUT, text)
+
+    def fill_review_email(self, text):
+        self.sl.wait_until_element_is_visible(self.REVIEWS_EMAIL_INPUT)
+        self.sl.wait_and_input_text(self.REVIEWS_EMAIL_INPUT, text)
+
+    def click_review_submit(self):
+        self.sl.wait_and_click(self.REVIEWS_SUBMIT_BUTTON)
+
+    def get_alert_text(self):
+        """Returns the text of the current browser alert. Raises if no alert is present."""
+        alert = self.driver.switch_to.alert
+        return alert.text
+
+    def dismiss_alert_if_present(self):
+        """Accepts any open browser alert (e.g. 'Please select a rating'). Call after submit if needed."""
+        try:
+            alert = self.driver.switch_to.alert
+            alert.accept()
+        except Exception:
+            pass
+
+    def get_reviews_tab_validation_or_error_text(self):
+        """Returns any visible error/validation message in the Reviews tab."""
+        try:
+            errors = self.driver.find_elements(By.CSS_SELECTOR, "div#tab-reviews .woocommerce-error, div#tab-reviews .comment-form .error, div#tab-reviews #commentform .error, div#tab-reviews ul.woocommerce-error li")
+            for el in errors:
+                if el.is_displayed() and el.text.strip():
+                    return el.text.strip()
+            return ""
+        except Exception:
+            return ""
+
+    def get_reviews_success_message_text(self):
+        """Returns success message text if review was submitted (e.g. 'awaiting moderation')."""
+        try:
+            content = self.get_reviews_tab_content_text()
+            if not content:
+                content = self.driver.find_element(By.TAG_NAME, "body").text
+            for phrase in ("awaiting moderation", "has been added", "thank you", "submitted"):
+                if content and phrase in content.lower():
+                    return content
+            return ""
+        except Exception:
+            try:
+                body = self.driver.find_element(By.TAG_NAME, "body").text
+                for phrase in ("awaiting moderation", "has been added", "thank you", "submitted"):
+                    if body and phrase in body.lower():
+                        return body
+            except Exception:
+                pass
+            return ""
+
+    def get_review_list_elements(self):
+        """Returns list of review/comment elements in the Reviews tab (ol.commentlist li.comment)."""
+        try:
+            return self.sl.wait_and_get_elements(self.REVIEWS_LIST)
+        except Exception:
+            return []
+
+    def get_review_list_texts(self):
+        """Returns list of visible text per review (one string per li.comment). Caller must have Reviews tab open."""
+        elements = self.get_review_list_elements()
+        return [el.text for el in elements] if elements else []
+
+    def get_reviews_tab_label_text(self):
+        """Returns the Reviews tab label text (e.g. 'Reviews (0)' or 'Reviews (1)')."""
+        labels = self.get_labels_of_left_nav_tabs()
+        for lbl in labels:
+            if lbl and "review" in lbl.lower():
+                return lbl
+        return ""
 
     def get_label_for_color_attribute_dropdown(self):
         return self.sl.wait_and_get_text(self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_LABEL)
