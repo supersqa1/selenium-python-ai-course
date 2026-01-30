@@ -1,0 +1,25 @@
+---
+description: Technical standards for creating new Selenium tests and Page Objects.
+globs: ["tests/**/*.py", "src/pages/**/*.py"]
+---
+
+# Technical Authoring Standards
+
+Follow these strict technical requirements when expanding the suite:
+
+### 1. Locator Stability
+- One element, one locator. Do not provide multiple locator options (backup selectors) for a single element. 
+- If a locator changes in the UI, the test should fail so we can identify the change. 
+- Prefer ID, or unique CSS selectors over brittle XPaths.
+
+### 2. Setup and Teardown
+- Always implement proper setup and teardown logic using PyTest fixtures.
+- Ensure the application state is cleaned up after each test execution to maintain test isolation.
+
+### 3. Autonomous Page Object Updates
+- When creating a new test, if an interaction is missing from `src/pages/`, you must automatically create the necessary method.
+- You must use the `SeleniumExtended` base class wrappers (e.g., `wait_and_click`) for all new interactions.
+- Never use raw driver commands or `time.sleep()`. Unless you have to and there is no better way.
+
+### 4. Descriptive Assertions
+- All assertions must include a failure message explaining what was expected vs what was found.
