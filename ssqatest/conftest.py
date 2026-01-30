@@ -61,6 +61,9 @@ def init_driver(request):
         ff_options.add_argument("--headless")
         driver = webdriver.Firefox(options=ff_options)
 
+    # Standard viewport for deterministic UI tests (Full HD desktop)
+    driver.set_window_size(1920, 1080)
+
     request.cls.driver = driver
     yield
     driver.quit()
