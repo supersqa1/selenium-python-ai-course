@@ -97,23 +97,38 @@ TC-109,Verify Sale Price Display (Simple Product),Ensure original and sale price
 2. Observe price section.",Original price (e.g. $20.00) and current price (e.g. $18.00) are displayed.,Yes
 TC-106,Verify Add to Cart Button on PDP (Simple Product),Ensure the Add to Cart button is present on the Beanie page.,High,PDP (Simple),Product 'beanie' exists.,"1. Navigate to Beanie PDP.
 2. Locate 'Add to cart' button.",Button is visible with text 'Add to cart'.,Yes
-TMP-BEANIE-007,Verify Quantity Field Default on PDP (Simple Product),Ensure the quantity input defaults to 1 on Beanie PDP.,Low,PDP (Simple),Product 'beanie' exists.,"1. Navigate to Beanie PDP.
-2. Check quantity input value.",Default value is '1'.,No
+TC-113,Verify Quantity Field Default on PDP (Simple Product),Ensure the quantity input defaults to 1 on Beanie PDP.,Low,PDP (Simple),Product 'beanie' exists.,"1. Navigate to Beanie PDP.
+2. Check quantity input value.",Default value is '1'.,Yes
 TC-110,Verify SKU on PDP (Simple Product),Ensure the correct SKU is displayed for Beanie.,Medium,PDP (Simple),Product 'beanie' exists.,"1. Navigate to Beanie PDP.
 2. Check SKU field.",SKU displays 'woo-beanie'.,Yes
 TC-111,Verify Category on PDP (Simple Product),Ensure the correct Category is displayed for Beanie.,Medium,PDP (Simple),Product 'beanie' exists.,"1. Navigate to Beanie PDP.
 2. Check Category field.",Category displays 'Accessories'.,Yes
 TC-112,Verify Description Section on PDP (Simple Product),Ensure the Description header and content are rendered on Beanie PDP.,Medium,PDP (Simple),Product 'beanie' exists.,"1. Navigate to Beanie PDP.
 2. Locate description section and read content.",Header is 'Description' and description text is present.,Yes
-TMP-BEANIE-011,Verify Additional Information Section (Simple Product),Ensure the Additional information tab/section exists and shows product attributes (e.g. Color: Red).,Medium,PDP (Simple),Product 'beanie' exists.,"1. Navigate to Beanie PDP.
+TC-114,Verify Additional Information Section (Simple Product),Ensure the Additional information tab/section exists and shows product attributes (e.g. Color: Red).,Medium,PDP (Simple),Product 'beanie' exists.,"1. Navigate to Beanie PDP.
 2. Open 'Additional information' tab/section.
-3. Verify content.",Additional information section shows expected attributes (e.g. Color: Red).,No
-TMP-BEANIE-012,Verify Related Products on PDP (Simple Product),Ensure Related products section and list are displayed on Beanie PDP.,Medium,PDP (Simple),Product 'beanie' exists.,"1. Navigate to Beanie PDP.
-2. Locate related products section.",Header is 'Related products' and related product items (e.g. Belt, Sunglasses, Beanie with Logo) are displayed with images.,No
-TMP-BEANIE-013,Verify Product Tabs on PDP (Simple Product),Ensure all standard tabs are present on Beanie PDP.,Medium,PDP (Simple),Product 'beanie' exists.,"1. Navigate to Beanie PDP.
-2. Check tab labels.","Tabs 'Description', 'Additional information', and 'Reviews' are present.",No
+3. Verify content.",Additional information section shows expected attributes (e.g. Color: Red).,Yes
+TC-115,Verify Related Products on PDP (Simple Product),Ensure Related products section and list are displayed on Beanie PDP.,Medium,PDP (Simple),Product 'beanie' exists.,"1. Navigate to Beanie PDP.
+2. Locate related products section.",Header is 'Related products' and related product items (e.g. Belt Sunglasses  Beanie with Logo) are displayed with images.,Yes
+TC-116,Verify Product Tabs on PDP (Simple Product),Ensure all standard tabs are present on Beanie PDP.,Medium,PDP (Simple),Product 'beanie' exists.,"1. Navigate to Beanie PDP.
+2. Check tab labels.","Tabs 'Description', 'Additional information', and 'Reviews' are present.",Yes
 TC-107,Add Simple Product to Cart,Verify user can add Beanie to cart without selecting options and product appears in cart.,Critical,PDP (Simple),Product 'beanie' exists.,"1. Navigate to Beanie PDP.
 2. Click 'Add to cart'.
-3. View Cart.","Product 'Beanie' is present in the cart.",Yes
-TMP-BEANIE-015,Verify Free Shipping Banner on PDP,Ensure the free shipping promotional banner is visible on the Product Detail Page (e.g. Beanie).,Medium,UI Components / PDP,Product page exists.,"1. Navigate to any PDP (e.g. Beanie).
-2. Observe the top notification bar.",The banner text 'Free shipping on orders over $50' is clearly visible.,No
+3. View Cart.",Product 'Beanie' is present in the cart.,Yes
+TC-117,Verify Free Shipping Banner on PDP,Ensure the free shipping promotional banner is visible on the Product Detail Page (e.g. Beanie).,Medium,UI Components / PDP,Product page exists.,"1. Navigate to any PDP (e.g. Beanie).
+2. Observe the top notification bar.",The banner text 'Free shipping on orders over $50' is clearly visible.,Yes
+TC-118,Verify Breadcrumb on PDP (Simple Product),Breadcrumb must be visible and contain the product name (Beanie).,Low,PDP (Simple),Product 'beanie' exists.,"1. Navigate to Beanie PDP.
+2. Locate breadcrumb.",Breadcrumb is visible and contains 'Beanie'.,Yes
+TC-119,Verify Sale Badge Visible When Product on Sale,When product is on sale the Sale! badge must be visible on PDP.,Medium,PDP (Simple),Product 'beanie' on sale (API).,"1. Set Beanie on sale via API.
+2. Navigate to Beanie PDP.
+3. Observe sale badge.",Sale badge (e.g. 'Sale!') is visible.,Yes
+TC-120,Verify Sale Badge Not Visible When Not on Sale,When product is not on sale the Sale! badge must not be visible.,Low,PDP (Simple),Product 'beanie' not on sale (API).,"1. Ensure Beanie is not on sale via API.
+2. Navigate to Beanie PDP.
+3. Observe sale badge area.",Sale badge is not displayed.,Yes
+TC-121,Verify Quantity Field Accepts Value on PDP,Quantity input must accept and display a value (e.g. 3).,Low,PDP (Simple),Product 'beanie' exists.,"1. Navigate to Beanie PDP.
+2. Enter quantity 3 in quantity field.
+3. Verify displayed value.",Quantity field displays '3'.,Yes
+TC-122,Add Simple Product to Cart with Quantity 2,User can set quantity to 2 add to cart and see quantity 2 in cart.,Critical,PDP (Simple),Product 'beanie' exists.,"1. Navigate to Beanie PDP.
+2. Set quantity to 2.
+3. Click 'Add to cart'.
+4. View Cart.",Cart shows Beanie with quantity 2.,Yes

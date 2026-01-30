@@ -58,6 +58,54 @@ class ProductPage(ProductPageLocators):
     def get_quantity_field_element(self):
         return self.sl.wait_until_element_is_visible(self.PRODUCT_PAGE_QUANTITY_FIELD)
 
+    def set_quantity(self, value):
+        """Set the quantity input to the given integer (e.g. 2). Clears existing value first."""
+        qty_field = self.get_quantity_field_element()
+        qty_field.clear()
+        qty_field.send_keys(str(int(value)))
+
+    def get_breadcrumb_text(self):
+        """Returns the visible text of the PDP breadcrumb (e.g. 'Home / Clothing / Accessories / Beanie')."""
+        return self.sl.wait_and_get_text(self.BREADCRUMB)
+
+    def is_sale_badge_visible(self):
+        """Returns True if the main product's sale badge is visible (ignores related products in section.related)."""
+        try:
+            elements = self.sl.wait_and_get_elements(self.SALE_BADGE)
+            for el in elements:
+                if not el.is_displayed():
+                    continue
+                try:
+                    in_related = self.driver.execute_script(
+                        "var s = arguments[0].closest('section.related'); return s !== null;", el
+                    )
+                    if not in_related:
+                        return True
+                except Exception:
+                    pass
+            return False
+        except Exception:
+            return False
+
+    def get_sale_badge_text(self):
+        """Returns the main product's sale badge text if visible (first badge not in section.related)."""
+        try:
+            elements = self.sl.wait_and_get_elements(self.SALE_BADGE)
+            for el in elements:
+                if not el.is_displayed():
+                    continue
+                try:
+                    in_related = self.driver.execute_script(
+                        "var s = arguments[0].closest('section.related'); return s !== null;", el
+                    )
+                    if not in_related:
+                        return el.text or ""
+                except Exception:
+                    pass
+            return ""
+        except Exception:
+            return ""
+
     def get_displayed_sku_and_label(self):
         return self.sl.wait_and_get_text(self.PRODUCT_PAGE_SKU_AND_LABEL)
 
@@ -88,6 +136,14 @@ class ProductPage(ProductPageLocators):
     def get_labels_of_left_nav_tabs(self):
         tabs_elements = self.get_left_nav_tab_elements()
         return [i.text for i in tabs_elements]
+
+    def click_additional_information_tab(self):
+        """Clicks the Additional information tab so its content is visible."""
+        self.sl.wait_and_click(self.ADDITIONAL_INFO_TAB_LINK)
+
+    def get_additional_information_content_text(self):
+        """Returns the visible text of the Additional information tab content."""
+        return self.sl.wait_and_get_text(self.ADDITIONAL_INFO_CONTENT)
 
     def get_label_for_color_attribute_dropdown(self):
         return self.sl.wait_and_get_text(self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_LABEL)

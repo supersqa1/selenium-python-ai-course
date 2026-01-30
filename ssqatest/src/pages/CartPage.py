@@ -1,6 +1,6 @@
 
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from ssqatest.src.SeleniumExtended import SeleniumExtended
 from ssqatest.src.pages.locators.CartPageLocators import CartPageLocators
 from ssqatest.src.helpers.config_helpers import get_base_url
@@ -31,6 +31,26 @@ class CartPage(CartPageLocators):
             if text:
                 product_names.append(text)
         return product_names
+
+    def get_quantity_for_product(self, product_name):
+        """
+        Returns the cart quantity for the given product name (exact or contains match).
+        Uses CART_LINE_ITEMS: each line item contains product name and quantity in the same row/block.
+        """
+        try:
+            items = self.sl.wait_and_get_elements(self.CART_LINE_ITEMS)
+        except Exception:
+            return None
+        for item in items:
+            try:
+                name_el = item.find_element(By.CSS_SELECTOR, "[class*='product-name']")
+                if product_name not in (name_el.text or "") and (name_el.text or "").strip() != product_name:
+                    continue
+                qty_el = item.find_element(By.CSS_SELECTOR, "input.qty")
+                return qty_el.get_attribute("value")
+            except NoSuchElementException:
+                continue
+        return None
 
     def _expand_coupon_panel_if_collapsed(self):
         """Expand the coupon panel if it's collapsed. The coupon field is hidden inside a collapsible panel."""
