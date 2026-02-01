@@ -6,7 +6,7 @@ from ssqatest.src.pages.MyAccountSignedOut import MyAccountSignedOut
 @pytest.mark.usefixtures('init_driver')
 class TestExistingUserLogin:
 
-    @pytest.mark.xxy
+    @pytest.mark.tcid14
     def test_existing_user_login(self):
         my_acct_singed_out = MyAccountSignedOut(self.driver)
 

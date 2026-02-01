@@ -33,6 +33,31 @@ TC-13,New User Registration,Verify a visitor can register a new account.,High,My
 2. Enter a new email address.
 3. Enter a valid password.
 4. Click Register.",User is registered and immediately signed in.,Yes
+TC-14,Existing User Login,Verify an existing user can log in with valid credentials.,High,My Account,User exists (e.g. created via API).,"1. Create user via API (or use existing).
+2. Navigate to My Account.
+3. Enter username and password.
+4. Click Login.",User is logged in; account/dashboard is visible.,Yes
+TC-148,My Account (Logged In) – Page Loads,Smoke: Logged-in My Account page loads and shows account area (not login form).,High,My Account (Logged In),User is logged in (session established via fixture).,"1. Establish logged-in session (API/cookie or fixture).
+2. Navigate to My Account.",Account area is visible; login/register form is NOT shown; Log out link is visible.,Yes
+TC-149,My Account (Logged In) – Left Nav Present,Smoke: Left sidebar shows all expected account navigation links.,High,My Account (Logged In),User is logged in.,"1. Establish logged-in session.
+2. Navigate to My Account.
+3. Observe left sidebar.",Left nav shows Dashboard Orders Downloads Addresses Account details Log out.,Yes
+TC-150,My Account (Logged In) – Main Content Visible,Smoke: Main content area is visible (default tab).,High,My Account (Logged In),User is logged in.,"1. Establish logged-in session.
+2. Navigate to My Account.
+3. Observe main content area.",Main content area is visible (Dashboard or default tab content).,Yes
+TC-151,My Account (Logged In) – Log Out Link Visible,Smoke: Log out link is present and visible in left nav.,High,My Account (Logged In),User is logged in.,"1. Establish logged-in session.
+2. Navigate to My Account.
+3. Locate Log out in left nav.",Log out link is visible and present in left sidebar.,Yes
+TC-152,My Account (Logged In) – Breadcrumb Shows My Account,Smoke: Breadcrumb trail includes My account.,Medium,My Account (Logged In),User is logged in.,"1. Establish logged-in session.
+2. Navigate to My Account.
+3. Observe breadcrumb.",Breadcrumb contains 'My account'. (e.g. Home > My account > ...),Yes
+TC-153,My Account (Logged In) – Account Details Tab,Smoke: Account details tab opens and shows key form elements.,High,My Account (Logged In),User is logged in.,"1. Establish logged-in session.
+2. Navigate to My Account.
+3. Click Account details in left nav.
+4. Observe form.",Account details section visible: First name Last name Display name Email address; Password change section; Save changes button.,Yes
+TC-154,My Account (Logged In) – Header Nav Visible,Smoke: Header navigation is present when logged in.,Medium,My Account (Logged In),User is logged in.,"1. Establish logged-in session.
+2. Navigate to My Account.
+3. Observe header.",Header shows expected menu items (e.g. Home Cart Checkout My account Sample Page).,Yes
 TC-80,Verify Product Name on PDP,Ensure the product detail page (PDP) displays the correct product title.,High,PDP,Variable product exists.,"1. Open PDP for a variable product.
 2. Observe product title.",Title matches the product database/API record.,Yes
 TC-81,Verify Main Product Image,Ensure the main product image loads correctly on the PDP.,High,PDP,Variable product exists.,"1. Open PDP for a variable product.

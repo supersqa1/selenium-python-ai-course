@@ -175,3 +175,68 @@ def get_api_credentials():
         )
 
     return {'base_url': base_url, 'api_key': api_key, 'api_secret': api_secret}
+
+
+def get_test_user(user_id: str):
+    """
+    Load a test user definition by id from configs/test_users.json and resolve
+    credentials from environment variables (username_env / password_env).
+    Use for tests that need a specific user type (e.g. my_account_smoke_user).
+
+    Returns:
+        dict with keys: id, description (optional), username, password
+
+    Raises:
+        FileNotFoundError: if test_users.json is missing
+        ValueError: if user_id is not found in config
+        EnvironmentError: if required username/password env vars are not set
+    """
+    import json
+    from pathlib import Path
+
+    configs_dir = Path(__file__).resolve().parent.parent / "configs"
+    users_path = configs_dir / "test_users.json"
+    if not users_path.exists():
+        raise FileNotFoundError(
+            f"Test users config not found: {users_path}\n"
+            f"   Expected a JSON file with a 'users' array of objects containing id, username_env, password_env."
+        )
+
+    with open(users_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    users = data.get("users") or []
+    user_def = next((u for u in users if u.get("id") == user_id), None)
+    if not user_def:
+        available = [u.get("id") for u in users if u.get("id")]
+        raise ValueError(
+            f"Test user '{user_id}' not found in test_users.json.\n"
+            f"   Available user ids: {available}"
+        )
+
+    username_env = user_def.get("username_env")
+    password_env = user_def.get("password_env")
+    if not username_env or not password_env:
+        raise ValueError(
+            f"Test user '{user_id}' in test_users.json must define username_env and password_env."
+        )
+
+    username = os.environ.get(username_env)
+    password = os.environ.get(password_env)
+    if not username or not password:
+        missing = []
+        if not username:
+            missing.append(username_env)
+        if not password:
+            missing.append(password_env)
+        raise EnvironmentError(
+            f"❌ Missing test user credentials for '{user_id}': {', '.join(missing)}\n"
+            f"   Set in .env or export: {username_env}=... {password_env}=..."
+        )
+
+    return {
+        "id": user_def.get("id"),
+        "description": user_def.get("description"),
+        "username": username,
+        "password": password,
+    }
