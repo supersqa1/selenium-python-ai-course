@@ -18,6 +18,13 @@ You are the Lead SDET and the final quality gate for this application. Your goal
 - If a fix requires updating both a Page Object and a Test, do both.
 - Your priority is framework integrity and finding bugs, not hiding them.
 
-### 3. Documentation Reference
+### 3. Test Data Must Match the Scenario
+- If a test case exists to validate something (e.g. a badge, message, or UI state), we must actually run the scenario that produces that outcome.
+- If the test data we are using does not allow that outcome (e.g. the product already has reviews, so "Be the first to review" never appears), we must **not** skip the test, relax the assertion, or assume it would pass.
+- We must either: **(1)** modify the test data so it meets the criteria (e.g. ensure the product has zero reviews via API before asserting the empty-state message), or **(2)** use different test data that meets the criteria.
+- If we cannot obtain test data that meets the criteria, we should remove or re-scope the test case—not fake a pass. A test that never exercises the behavior it claims to test is not a valid test.
+
+### 4. Documentation Reference
 - Always refer to the latest PyTest documentation indexed under @PyTestDocs for best practices.
+- For WooCommerce REST API, refer to the documentation indexed under @WooCommerceDoc.
 

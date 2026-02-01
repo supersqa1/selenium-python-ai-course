@@ -23,3 +23,10 @@ Follow these strict technical requirements when expanding the suite:
 
 ### 4. Descriptive Assertions
 - All assertions must include a failure message explaining what was expected vs what was found.
+
+### 5. Text and Message Validation
+- Do **not** validate text by checking only one or two words from a phrase or sentence. That is too loose and can produce false positives.
+- **Static / unchanging text**: Validate an **exact one-to-one match** of the full expected text (e.g. label, error message, static copy). If the UI shows a fixed string, the test must assert that exact string.
+- **Text that varies but the situation is known ahead of time**: Plan for the known cases and assert the exact text for each situation (e.g. different error messages for different validation failures).
+- **Text that is partially or fully variable and not fully known**: Use **regular expressions** so the assertion matches the real structure of the text (e.g. "Review submitted. It will appear after moderation." vs a dynamic part). Ensure the regex actually validates the intended pattern—not just a couple of words.
+- Default to **exact match**. Use regex only when the text is variable or situation-dependent and exact text cannot be asserted. Never rely on "word X and word Y appear somewhere" as a substitute for validating the full message.
