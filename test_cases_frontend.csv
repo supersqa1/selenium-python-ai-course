@@ -132,3 +132,63 @@ TC-122,Add Simple Product to Cart with Quantity 2,User can set quantity to 2 add
 2. Set quantity to 2.
 3. Click 'Add to cart'.
 4. View Cart.",Cart shows Beanie with quantity 2.,Yes
+TC-123,Reviews Tab Opens and Content Visible,Verify the Reviews tab can be opened and its content panel is visible.,Medium,PDP Reviews,Product PDP exists (e.g. Beanie).,"1. Navigate to PDP (e.g. Beanie).
+2. Click Reviews tab.","Reviews tab content panel is visible; no error.",Yes
+TC-124,Zero Reviews – Empty State Text,When product has no reviews the empty state message is displayed.,Medium,PDP Reviews,Product has 0 reviews (API).,"1. Ensure product has 0 reviews (API).
+2. Navigate to PDP.
+3. Open Reviews tab.","'There are no reviews yet' (or equivalent) is visible.",Yes
+TC-126,Review Form Required Fields Present,Review form contains rating review text name email and submit.,Medium,PDP Reviews,Product PDP exists.,"1. Navigate to PDP.
+2. Open Reviews tab.","Rating selector review text input name input email input and submit button are present.",Yes
+TC-127,Submit Review Without Rating – Validation,Submitting without a rating shows validation.,Medium,PDP Reviews,Product PDP exists.,"1. Open PDP Reviews tab.
+2. Fill review text name email; leave rating empty.
+3. Submit.","Validation message shown; review not submitted.",Yes
+TC-128,Submit Review Without Review Text – Validation,Submitting without review text shows validation.,Medium,PDP Reviews,Product PDP exists.,"1. Open PDP Reviews tab.
+2. Select rating fill name email; leave review text empty.
+3. Submit.","Validation message shown; review not submitted.",Yes
+TC-129,Submit Review Without Name – Validation,Submitting without name shows validation.,Medium,PDP Reviews,Product PDP exists.,"1. Open PDP Reviews tab.
+2. Fill rating review text email; leave name empty.
+3. Submit.","Validation message shown; review not submitted.",Yes
+TC-130,Submit Review Without Email – Validation,Submitting without email shows validation.,Medium,PDP Reviews,Product PDP exists.,"1. Open PDP Reviews tab.
+2. Fill rating review text name; leave email empty.
+3. Submit.","Validation message shown; review not submitted.",Yes
+TC-131,Submit Review With Invalid Email – Validation,Submitting with invalid email format shows validation.,Medium,PDP Reviews,Product PDP exists.,"1. Open PDP Reviews tab.
+2. Fill rating review text name; enter invalid email (e.g. 'notanemail').
+3. Submit.","Validation message shown; review not submitted.",Yes
+TC-132,Submit Valid Review via UI – Review Appears,Customer submits a valid review and it appears in the list.,High,PDP Reviews,Product PDP exists.,"1. Navigate to PDP.
+2. Open Reviews tab.
+3. Fill rating (e.g. 5) review text name email.
+4. Submit.
+5. Reload or wait for display.","Review appears in list with correct rating and content.",Yes
+TC-133,After UI Submit – Tab Count Updates,After submitting a review the Reviews tab count updates.,Medium,PDP Reviews,Product had 0 reviews; user submits one.,"1. Submit one review via UI (or ensure 1 review exists).
+2. Observe Reviews tab label.","Tab shows 'Reviews (1)' (or incremented count).",Yes
+TC-134,Submitted Review Shows Correct Author,Submitted review displays the entered author name.,Medium,PDP Reviews,Product PDP exists.,"1. Submit review via UI with known name.
+2. Locate the new review in the list.","Review shows the submitted author name.",Yes
+TC-135,Create Review via API – Appears on PDP,Review created via API appears on PDP Reviews tab.,High,PDP Reviews,API can create product reviews.,"1. Create one product review via API (rating content reviewer).
+2. Navigate to PDP.
+3. Open Reviews tab.","Review text rating and reviewer (if shown) match API payload.",Yes
+TC-136,Create N Reviews via API – Tab and List Match,After creating N reviews via API tab label and list count match.,High,PDP Reviews,API can create product reviews.,"1. Create N reviews via API for product (e.g. N=3).
+2. Navigate to PDP.
+3. Open Reviews tab.","Tab shows 'Reviews (N)' and list shows N reviews.",Yes
+TC-138,Five Star Review Display,Review with 5-star rating shows 5 stars on PDP.,Medium,PDP Reviews,API can create reviews.,"1. Create 5-star review via API.
+2. Navigate to PDP; open Reviews tab.","UI shows 5 filled stars (or '5' rating).",Yes
+TC-139,Four Star Review Display,Review with 4-star rating shows 4 stars on PDP.,Medium,PDP Reviews,API can create reviews.,"1. Create 4-star review via API.
+2. Navigate to PDP; open Reviews tab.","UI shows 4 filled stars (or '4' rating).",Yes
+TC-140,Three Star Review Display,Review with 3-star rating shows 3 stars on PDP.,Medium,PDP Reviews,API can create reviews.,"1. Create 3-star review via API.
+2. Navigate to PDP; open Reviews tab.","UI shows 3 filled stars (or '3' rating).",Yes
+TC-141,One Star Review Display,Review with 1-star rating shows 1 star on PDP.,Low,PDP Reviews,API can create reviews.,"1. Create 1-star review via API.
+2. Navigate to PDP; open Reviews tab.","UI shows 1 filled star (or '1' rating).",Yes
+TC-142,Mixed Ratings – Average Displayed,Product with mixed ratings shows correct average rating.,High,PDP Reviews,API can create reviews.,"1. Create reviews with different ratings (e.g. 3 4 5) via API.
+2. Navigate to PDP.","Average rating displayed matches expected (e.g. 4.0).",Yes
+TC-143,Mixed Ratings – Review Count Correct,Product with multiple reviews shows correct total count.,Medium,PDP Reviews,API can create reviews.,"1. Create multiple reviews via API.
+2. Navigate to PDP; open Reviews tab.","'Reviews (N)' and number of review items match API count.",Yes
+TC-137,Single Review Display,Product with exactly one review displays it correctly.,Medium,PDP Reviews,Product has exactly 1 review (API).,"1. Ensure product has 1 review (API).
+2. Open PDP Reviews tab.","One review visible; rating content and author match.",Yes
+TC-144,Many Reviews – List or Pagination,Product with many reviews (e.g. 10+) displays list correctly.,Low,PDP Reviews,API can create many reviews.,"1. Create 10+ reviews via API.
+2. Open PDP Reviews tab.","All reviews visible or pagination works; count correct.",Yes
+TC-145,Review With Long Text – Display,Review with long comment text displays correctly.,Low,PDP Reviews,API can create reviews.,"1. Create review via API with long content.
+2. Open PDP Reviews tab.","Long text displayed (full or truncated appropriately).",Yes
+TC-146,Review With Special Characters – Display,Review content with special characters displays correctly.,Low,PDP Reviews,API can create reviews.,"1. Create review via API with special chars (e.g. < > &).
+2. Open PDP Reviews tab.","Content displays correctly (escaped or safe).",Yes
+TC-147,Review Form Save Details Checkbox Present,Verify the 'Save my name email and website in this browser for the next time I comment' checkbox is present on the review form.,Low,PDP Reviews,Product PDP exists.,"1. Navigate to PDP.
+2. Open Reviews tab.
+3. Locate the review form.","Checkbox with label 'Save my name email and website in this browser for the next time I comment' is visible.",Yes
