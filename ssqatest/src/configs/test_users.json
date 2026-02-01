@@ -1,0 +1,29 @@
+{
+  "_comment": "Test user definitions. Credentials are resolved from environment variables (see username_env / password_env). Never store real passwords here.",
+  "users": [
+    {
+      "id": "my_account_smoke_user",
+      "description": "Customer with no orders and no order history. Used for My Account logged-in smoke tests (dashboard, nav, logout).",
+      "username_env": "MY_ACCOUNT_SMOKE_USERNAME",
+      "password_env": "MY_ACCOUNT_SMOKE_PASSWORD"
+    },
+    {
+      "id": "user_with_one_order",
+      "description": "Customer with exactly one order (for order-history / single-order regression tests). Placeholder — set env vars when tests are added.",
+      "username_env": "USER_WITH_ONE_ORDER_USERNAME",
+      "password_env": "USER_WITH_ONE_ORDER_PASSWORD"
+    },
+    {
+      "id": "user_with_multiple_orders",
+      "description": "Customer with multiple orders (for order list, pagination, filters). Placeholder — set env vars when tests are added.",
+      "username_env": "USER_WITH_MULTIPLE_ORDERS_USERNAME",
+      "password_env": "USER_WITH_MULTIPLE_ORDERS_PASSWORD"
+    },
+    {
+      "id": "user_with_downloadable_order",
+      "description": "Customer with at least one order containing a downloadable product (for Downloads tab / regression). Placeholder — set env vars when tests are added.",
+      "username_env": "USER_WITH_DOWNLOADABLE_ORDER_USERNAME",
+      "password_env": "USER_WITH_DOWNLOADABLE_ORDER_PASSWORD"
+    }
+  ]
+}

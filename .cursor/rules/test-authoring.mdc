@@ -15,6 +15,8 @@ Follow these strict technical requirements when expanding the suite:
 ### 2. Setup and Teardown
 - Always implement proper setup and teardown logic using PyTest fixtures.
 - Ensure the application state is cleaned up after each test execution to maintain test isolation.
+- **New class, new browser**: Each test class gets its own browser instance (via `init_driver`).
+- **New class, new login**: Logged-in fixtures are class-scoped; one login per class. If a test needs a fresh login (e.g. different user or clean session), put it in a different class.
 
 ### 3. Autonomous Page Object Updates
 - When creating a new test, if an interaction is missing from `src/pages/`, you must automatically create the necessary method.

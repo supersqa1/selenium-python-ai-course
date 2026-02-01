@@ -7,7 +7,8 @@ from selenium.webdriver.firefox.options import Options as FFOptions
 import os
 import allure
 from dotenv import load_dotenv
-from ssqatest.src.helpers.config_helpers import validate_environment
+from ssqatest.src.helpers.config_helpers import validate_environment, get_base_url, get_test_user
+from ssqatest.src.helpers.auth_helpers import login_via_requests_and_inject_cookies
 
 # Load environment variables from .env file (if it exists)
 # This happens automatically before any fixtures or tests run
@@ -62,6 +63,22 @@ def init_driver(request):
     request.cls.driver = driver
     yield
     driver.quit()
+
+
+@pytest.fixture(scope="class")
+def logged_in_my_account_smoke(request):
+    """
+    Establishes a logged-in session once per test class using my_account_smoke_user
+    (test_users.json, credentials from env). Depends on init_driver: use with
+    @pytest.mark.usefixtures('init_driver', 'logged_in_my_account_smoke').
+    Framework rule: new class, new login — if a test needs a fresh login, put it in a different class.
+    """
+    driver = request.cls.driver
+    user = get_test_user("my_account_smoke_user")
+    base_url = get_base_url()
+    login_via_requests_and_inject_cookies(base_url, user["username"], user["password"], driver)
+    driver.get(base_url.rstrip("/") + "/my-account/")
+    yield
 
 
 
