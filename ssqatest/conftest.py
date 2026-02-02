@@ -95,115 +95,56 @@ def logged_in_user_with_one_order(request):
     yield
 
 
-# @pytest.hookimpl(hookwrapper=True)
-# def pytest_runtest_makereport(item, call):
-#     pytest_html = item.config.pluginmanager.getplugin("html")
-#     outcome = yield
-#     report = outcome.get_result()
-#     if report.when == "call":
-#         # always add url to report
-#         xfail = hasattr(report, "wasxfail")
-#         # check if test failed
-#         if (report.skipped and xfail) or (report.failed and not xfail):
-#             is_frontend_test = True if 'init_driver' in item.fixturenames else False
-#             if is_frontend_test:
-#                 results_dir = os.environ.get("RESULTS_DIR")
-#                 if not results_dir:
-#                     raise Exception("Environment variable 'RESULTS_DIR' must be set.")
-#
-#                 screen_shot_path = os.path.join(results_dir, item.name + '.png')
-#                 driver_fixture = item.funcargs['request']
-#                 allure.attach(driver_fixture.cls.driver.get_screenshot_as_png(),
-#                               name='screenshot',
-#                               attachment_type=allure.attachment_type.PNG)
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    """
+    On test failure, capture a screenshot and attach it to the pytest-html report
+    (only for tests that use init_driver and only when the html plugin is used).
+    """
+    outcome = yield
+    report = outcome.get_result()
+    extra = getattr(report, "extra", [])
 
+    if report.when != "call" or not report.failed:
+        report.extra = extra
+        return
 
-### FOR: generating only pytest-html report
-# @pytest.hookimpl(hookwrapper=True)
-# def pytest_runtest_makereport(item, call):
-#     pytest_html = item.config.pluginmanager.getplugin("html")
-#     outcome = yield
-#     report = outcome.get_result()
-#     extra = getattr(report, "extra", [])
+    xfail = hasattr(report, "wasxfail")
+    if report.skipped and xfail:
+        report.extra = extra
+        return
 
-#     if report.when == "call":
-#         # always add url to report
-#         xfail = hasattr(report, "wasxfail")
-#         # check if test failed
-#         if (report.skipped and xfail) or (report.failed and not xfail):
-#             is_frontend_test = True if 'init_driver' in item.fixturenames else False
-#             if is_frontend_test:
-#                 results_dir = os.environ.get("RESULTS_DIR")
-#                 if not results_dir:
-#                     raise Exception("Environment variable 'RESULTS_DIR' must be set.")
-#
-#                 screen_shot_path = os.path.join(results_dir, item.name + '.png')
-#                 driver_fixture = item.funcargs['request']
-#                 driver_fixture.cls.driver.save_screenshot(screen_shot_path)
-#                 # only add additional html on failure
-#                 # extra.append(pytest_html.extras.html('<div style="background:orange;">Additional HTML</div>'))
-#                 extra.append(pytest_html.extras.image(screen_shot_path))
-#
-#         report.extra = extra
+    pytest_html = item.config.pluginmanager.getplugin("html")
+    if pytest_html is None:
+        report.extra = extra
+        return
 
-#                 allure.attach(driver_fixture.cls.driver.get_screenshot_as_png(),
-#                               name='screenshot',
-#                               attachment_type=allure.attachment_type.PNG)
+    if "init_driver" not in item.fixturenames:
+        report.extra = extra
+        return
 
+    try:
+        request = item.funcargs.get("request")
+        driver = getattr(request.cls, "driver", None) if request and hasattr(request, "cls") else None
+        if driver is None:
+            report.extra = extra
+            return
 
-## FOR: generating only pytest-html report
-# @pytest.hookimpl(hookwrapper=True)
-# def pytest_runtest_makereport(item, call):
-#     pytest_html = item.config.pluginmanager.getplugin("html")
-#     outcome = yield
-#     report = outcome.get_result()
-#     extra = getattr(report, "extra", [])
-#     if report.when == "call":
-#         # always add url to report
-#         xfail = hasattr(report, "wasxfail")
-#         # check if test failed
-#         if (report.skipped and xfail) or (report.failed and not xfail):
-#             is_frontend_test = True if 'init_driver' in item.fixturenames else False
-#             if is_frontend_test:
-#                 results_dir = os.environ.get("RESULTS_DIR")
-#                 if not results_dir:
-#                     raise Exception("Environment variable 'RESULTS_DIR' must be set.")
-#
-#                 screen_shot_path = os.path.join(results_dir, item.name + '.png')
-#                 driver_fixture = item.funcargs['request']
-#                 driver_fixture.cls.driver.save_screenshot(screen_shot_path)
-#                 # only add additional html on failure
-#                 # extra.append(pytest_html.extras.html('<div style="background:orange;">Additional HTML</div>'))
-#                 extra.append(pytest_html.extras.image(screen_shot_path))
-#
-#         report.extra = extra
+        screenshot_base64 = driver.get_screenshot_as_base64()
+        extra.append(pytest_html.extras.image(screenshot_base64))
 
+        results_dir = os.environ.get("RESULTS_DIR", ".")
+        if results_dir:
+            screenshot_dir = os.path.join(results_dir, "screenshots")
+            os.makedirs(screenshot_dir, exist_ok=True)
+            safe_name = item.nodeid.replace("::", "_").replace("/", "_").replace(" ", "_").strip("_") + ".png"
+            screenshot_path = os.path.join(screenshot_dir, safe_name)
+            try:
+                driver.save_screenshot(screenshot_path)
+            except Exception:
+                pass
+    except Exception:
+        pass
 
-# #========
-# @pytest.hookimpl(hookwrapper=True)
-# def pytest_runtest_makereport(item, call):
-#     pytest_html = item.config.pluginmanager.getplugin("html")
-#     outcome = yield
-#     report = outcome.get_result()
-#     extra = getattr(report, "extra", [])
-#     if report.when == "call":
-#         # always add url to report
-#         extra.append(pytest_html.extras.url("http://www.example.com/"))
-#         xfail = hasattr(report, "wasxfail")
-#         # check if test failed
-#         if (report.skipped and xfail) or (report.failed and not xfail):
-#             is_frontend_test = True if 'init_driver' in item.fixturenames else False
-#             if is_frontend_test:
-#                 results_dir = os.environ.get("RESULTS_DIR")
-#                 if not results_dir:
-#                     raise Exception("Environment variables 'RESULTS_DIR' must be set")
-#                 screenshot_path = os.path.join(results_dir, item.name + '.png')
-#                 driver_fixture = item.funcargs['request']
-#                 driver = driver_fixture.cls.driver.save_screenshot(screenshot_path)
-#             # only add additional html on failure
-#             # extra.append(pytest_html.extras.html("<div>Additional HTML</div>"))
-#             # extra.append(pytest_html.extras.image("/Users/mneelaka/PycharmProjects/python_selenium_course/ssqatest/image.jpeg"))
-#             extra.append(pytest_html.extras.image("screenshot_path"))
-#
-#         report.extra = extra
+    report.extra = extra
 
