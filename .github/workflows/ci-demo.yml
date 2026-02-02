@@ -5,9 +5,9 @@ name: CI/CD Demo Pipeline
 
 on:
   push:
-    branches: [**/*]
+    # No branches filter = runs on push to every branch
   pull_request:
-    branches: [main, develop]
+    # No branches filter = runs on PR to every branch
 
 env:
   PYTHON_VERSION: "3.11"
