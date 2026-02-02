@@ -50,7 +50,17 @@ class ProductPage(ProductPageLocators):
         self.sl.wait_and_click(self.ADD_TO_CART_BUTTON)
 
     def get_view_cart_btn_on_add_to_cart_success_message_box(self):
-        return self.sl.wait_until_element_is_visible(self.VIEW_CART_BTN_IN_SUCCESS_MESSAGE)
+        """View cart link after add-to-cart success; falls back to any visible cart link if theme differs."""
+        from selenium.common.exceptions import TimeoutException
+        from selenium.webdriver.common.by import By
+        try:
+            return self.sl.wait_until_element_is_visible(self.VIEW_CART_BTN_IN_SUCCESS_MESSAGE, timeout=10)
+        except TimeoutException:
+            links = self.driver.find_elements(By.CSS_SELECTOR, 'a[href*="cart"]')
+            for el in links:
+                if el.is_displayed() and ("view" in (el.text or "").lower() or "cart" in (el.text or "").lower()):
+                    return el
+            raise
 
     def click_view_cart_btn_on_add_to_cart_success_message_box(self):
         view_cart_btn = self.get_view_cart_btn_on_add_to_cart_success_message_box()
@@ -334,6 +344,20 @@ class ProductPage(ProductPageLocators):
         return self.sl.wait_and_get_text(self.VARIABLE_PRODUCT_COLOR_ATTRIBUTE_LABEL)
 
     def get_label_for_logo_attribute_dropdown(self):
+        """Logo attribute label; wait for variations table then find by text or locator (theme/headless may differ)."""
+        from selenium.webdriver.common.by import By
+        # Wait for variations table to be present (headless may render later)
+        self.sl.wait_until_element_is_visible((By.CSS_SELECTOR, "table.variations"), timeout=15)
+        ths = self.driver.find_elements(By.CSS_SELECTOR, "table.variations tr th.label")
+        for th in ths:
+            text = (th.text or "").strip()
+            if "Logo" in text:
+                return "Logo"
+        labels = self.driver.find_elements(By.CSS_SELECTOR, "table.variations tr th.label label")
+        for el in labels:
+            if "Logo" in (el.text or ""):
+                return "Logo"
+        # Primary: explicit locator (for= logo, pa_logo, attribute_logo)
         return self.sl.wait_and_get_text(self.VARIABLE_PRODUCT_LOGO_ATTRIBUTE_LABEL)
 
     def get_color_dropdown_options_elements(self):

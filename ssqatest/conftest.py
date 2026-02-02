@@ -81,6 +81,19 @@ def logged_in_my_account_smoke(request):
     yield
 
 
+@pytest.fixture(scope="class")
+def logged_in_user_with_one_order(request):
+    """
+    Logged-in session using user_with_one_order (test_users.json). Use for tests that need
+    a user with at least one order (e.g. Orders tab order list). Depends on init_driver.
+    """
+    driver = request.cls.driver
+    user = get_test_user("user_with_one_order")
+    base_url = get_base_url()
+    login_via_requests_and_inject_cookies(base_url, user["username"], user["password"], driver)
+    driver.get(base_url.rstrip("/") + "/my-account/")
+    yield
+
 
 # @pytest.hookimpl(hookwrapper=True)
 # def pytest_runtest_makereport(item, call):

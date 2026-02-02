@@ -10,7 +10,8 @@ class ProductPageLocators:
     PRODUCT_PRICE = (By.CSS_SELECTOR, 'div.entry-summary p.price')
     # Works for both simple (single_add_to_cart_button) and variable (add_to_cart_button) product pages
     ADD_TO_CART_BUTTON = (By.CSS_SELECTOR, 'form.cart button[type="submit"]')
-    VIEW_CART_BTN_IN_SUCCESS_MESSAGE = (By.CSS_SELECTOR, 'div.woocommerce-message[role="alert"] a.button.wc-forward')
+    # Success message "View cart" link; theme may omit role="alert" or .wc-forward
+    VIEW_CART_BTN_IN_SUCCESS_MESSAGE = (By.CSS_SELECTOR, 'div.woocommerce-message a.button.wc-forward, div.woocommerce-message a.button[href*="cart"]')
     # Works for both simple (form.cart) and variable (div.add-to-cart) product pages
     PRODUCT_PAGE_QUANTITY_FIELD = (By.CSS_SELECTOR, 'form.cart div.quantity input.input-text.qty')
     PRODUCT_PAGE_SKU_AND_LABEL = (By.CSS_SELECTOR, 'div.product_meta span.sku_wrapper')
@@ -40,7 +41,8 @@ class ProductPageLocators:
     # Sale badge (WooCommerce .onsale); main product only – filter out section.related in code
     SALE_BADGE = (By.CSS_SELECTOR, 'span.onsale')
     VARIABLE_PRODUCT_COLOR_ATTRIBUTE_LABEL = (By.CSS_SELECTOR, 'table.variations tr th.label label[for="pa_color"]')
-    VARIABLE_PRODUCT_LOGO_ATTRIBUTE_LABEL = (By.CSS_SELECTOR, 'table.variations tr th.label label[for="logo"], table.variations tr th.label label[for="attribute_logo"]')
+    # Logo attribute: theme may use for="logo", for="pa_logo", or for="attribute_logo"
+    VARIABLE_PRODUCT_LOGO_ATTRIBUTE_LABEL = (By.CSS_SELECTOR, 'table.variations tr th.label label[for="logo"], table.variations tr th.label label[for="attribute_logo"], table.variations tr th.label label[for="pa_logo"]')
     VARIABLE_PRODUCT_COLOR_ATTRIBUTE_DROPDOWN = (By.CSS_SELECTOR, 'table.variations tr select[name="attribute_pa_color"]')
     VARIABLE_PRODUCT_COLOR_ATTRIBUTE_OPTIONS = (By.CSS_SELECTOR, 'table.variations tr select[name="attribute_pa_color"] option')
     VARIABLE_PRODUCT_LOGO_ATTRIBUTE_OPTIONS = (By.CSS_SELECTOR, 'table.variations tr select[name="attribute_logo"] option')

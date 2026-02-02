@@ -134,5 +134,7 @@ class TestProductDetailPageVariableProduct:
 
     @pytest.mark.tcid95
     def test_variable_product_page_logo_dropdown_label(self, setup):
+        # Logo attribute is on hoodie; random variable product may not have it
+        self.product_page.go_to_product_page("hoodie")
         label = self.product_page.get_label_for_logo_attribute_dropdown()
         assert label == 'Logo', f"Expected label 'Logo' for logo attribute dropdown."
