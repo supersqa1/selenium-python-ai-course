@@ -52,6 +52,27 @@ class CartPage(CartPageLocators):
                 continue
         return None
 
+    def has_quantity_value_2_on_page(self):
+        """True if any quantity input on the cart page has value 2 (classic or block cart)."""
+        try:
+            # Classic cart: form.woocommerce-cart-form, tr.cart_item input.qty; block cart: various
+            selectors = [
+                "input.qty",
+                "input[type='number'][class*='quantity']",
+                "form.woocommerce-cart-form input[value='2']",
+                "form.cart input[value='2']",
+                ".cart_item input[value='2']",
+                "[class*='cart'] input[value='2']",
+            ]
+            for sel in selectors:
+                inputs = self.driver.find_elements(By.CSS_SELECTOR, sel)
+                for el in inputs:
+                    if el.is_displayed() and (el.get_attribute("value") or "").strip() == "2":
+                        return True
+            return False
+        except Exception:
+            return False
+
     def _expand_coupon_panel_if_collapsed(self):
         """Expand the coupon panel if it's collapsed. The coupon field is hidden inside a collapsible panel."""
         import time

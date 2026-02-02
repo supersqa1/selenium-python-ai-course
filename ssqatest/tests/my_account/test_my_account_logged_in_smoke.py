@@ -1,7 +1,8 @@
 """
-My Account (logged-in) smoke tests. Test case IDs: TC-148, TC-149, TC-150, TC-151, TC-152, TC-153, TC-154.
+My Account (logged-in) smoke tests. Test case IDs: TC-148–TC-154, TC-155 (Orders tab), TC-156 (Orders empty state).
 Uses pre-seeded user (my_account_smoke_user) and logged_in_my_account_smoke fixture
 to establish session via API/cookie injection; no UI login.
+TC-157 (Orders tab with order list) is in a separate class with user_with_one_order.
 """
 
 import pytest
@@ -67,3 +68,36 @@ class TestMyAccountLoggedInSmoke:
         menu_texts = header.get_all_menu_item_text()
         for expected in EXPECTED_HEADER_MENU_ITEMS:
             assert expected in menu_texts, f"Header should show '{expected}'. Got: {menu_texts}"
+
+    @pytest.mark.tcid155
+    def test_orders_tab_opens_and_content_visible(self):
+        """TC-155: Orders tab opens and order section content is visible."""
+        page = MyAccountSignedIn(self.driver)
+        page.click_orders_link()
+        assert page.is_main_content_visible(), "Orders section (main content) should be visible."
+        content = page.get_orders_content_text()
+        assert content, "Orders tab content should not be empty (table or empty state)."
+
+    @pytest.mark.tcid156
+    def test_orders_tab_empty_state_when_no_orders(self):
+        """TC-156: When user has no orders, Orders tab shows empty state message."""
+        page = MyAccountSignedIn(self.driver)
+        page.click_orders_link()
+        content = page.get_orders_content_text()
+        assert "no order" in content.lower() or "no orders" in content.lower() or "have been made" in content.lower(), (
+            f"Empty state message expected (e.g. 'No order has been made yet'). Got: {content[:200]}..."
+        )
+
+
+@pytest.mark.usefixtures("init_driver", "logged_in_user_with_one_order")
+class TestMyAccountOrdersTabWithOrders:
+    """Orders tab when user has at least one order (user_with_one_order)."""
+
+    @pytest.mark.tcid157
+    def test_orders_tab_shows_order_list(self):
+        """TC-157: When user has at least one order, Orders tab shows at least one order in the list."""
+        page = MyAccountSignedIn(self.driver)
+        page.click_orders_link()
+        assert page.is_orders_table_visible(), "Orders table should be visible when user has orders."
+        row_count = page.get_orders_table_row_count()
+        assert row_count >= 1, f"At least one order row expected. Got: {row_count}"

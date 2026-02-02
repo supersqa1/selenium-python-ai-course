@@ -34,6 +34,45 @@ def create_user():
 
     return user_info
 
+
+def create_customer():
+    """
+    Creates a customer via WooCommerce API and returns id, email, password.
+    Use when you need the customer id (e.g. to create an order for that customer).
+    """
+    api_obj = create_api_object()
+    user_info = generate_random_email_and_password()
+    payload = {"email": user_info["email"], "password": user_info["password"]}
+    response = api_obj.post("customers", payload)
+    assert response.status_code == 201, f"Failed to create customer. Response: {response.json()}"
+    data = response.json()
+    return {"id": data["id"], "email": user_info["email"], "password": user_info["password"]}
+
+
+def create_order_for_customer(customer_id, product_id=None):
+    """
+    Creates one order for the given customer via WooCommerce API (status=completed so it appears in My Account).
+    :param customer_id: WooCommerce customer ID (int).
+    :param product_id: Product to add to the order; if None, uses first available product (e.g. beanie).
+    :return: Created order dict from API.
+    """
+    api_obj = create_api_object()
+    if product_id is None:
+        product = get_product_by_slug("beanie")
+        product_id = product["id"]
+    payload = {
+        "customer_id": int(customer_id),
+        "line_items": [{"product_id": int(product_id), "quantity": 1}],
+        "status": "completed",
+    }
+    response = api_obj.post("orders", payload)
+    assert response.status_code == 201, (
+        f"Failed to create order for customer {customer_id}. "
+        f"Status: {response.status_code}. Response: {response.text}"
+    )
+    return response.json()
+
+
 def create_coupon(coupon_code=None, length=7, expired=False):
 
     if expired:

@@ -58,6 +58,18 @@ TC-153,My Account (Logged In) – Account Details Tab,Smoke: Account details tab
 TC-154,My Account (Logged In) – Header Nav Visible,Smoke: Header navigation is present when logged in.,Medium,My Account (Logged In),User is logged in.,"1. Establish logged-in session.
 2. Navigate to My Account.
 3. Observe header.",Header shows expected menu items (e.g. Home Cart Checkout My account Sample Page).,Yes
+TC-155,My Account (Logged In) – Orders Tab Opens,Regression: Orders tab opens and order section content is visible.,High,My Account (Logged In),User is logged in.,"1. Establish logged-in session.
+2. Navigate to My Account.
+3. Click Orders in left nav.
+4. Observe main content area.",Orders section is visible; order table or empty state is displayed.,Yes
+TC-156,My Account (Logged In) – Orders Tab Empty State,Regression: When user has no orders the Orders tab shows empty state message.,High,My Account (Logged In),User is logged in with no order history (e.g. my_account_smoke_user).,"1. Establish logged-in session (user with no orders).
+2. Navigate to My Account.
+3. Click Orders in left nav.
+4. Observe content.",Empty state message is displayed (e.g. 'No order has been made yet' or equivalent).,Yes
+TC-157,My Account (Logged In) – Orders Tab Shows Order List,Regression: When user has at least one order the Orders tab shows at least one order in the list.,High,My Account (Logged In),User is logged in with at least one order (e.g. user_with_one_order).,"1. Establish logged-in session (user with orders).
+2. Navigate to My Account.
+3. Click Orders in left nav.
+4. Observe order list.",At least one order row/link is visible in the order list.,Yes
 TC-80,Verify Product Name on PDP,Ensure the product detail page (PDP) displays the correct product title.,High,PDP,Variable product exists.,"1. Open PDP for a variable product.
 2. Observe product title.",Title matches the product database/API record.,Yes
 TC-81,Verify Main Product Image,Ensure the main product image loads correctly on the PDP.,High,PDP,Variable product exists.,"1. Open PDP for a variable product.
