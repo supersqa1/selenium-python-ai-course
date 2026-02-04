@@ -40,11 +40,12 @@ jobs:
           DB_USER: root
           DB_PASSWORD: placeholder
         run: |
+          cd ssqatest
           mkdir -p results
           # Self-contained: screenshot embedded as base64 in report (single file).
           # If images don't show when opening the file directly, run: python -m http.server 8000
           # in the report folder and open http://localhost:8000/report.html
-          pytest -m tcid12 -v --html=results/report.html --self-contained-html
+          pytest tests -v --html=../results/report.html --self-contained-html
 
       - name: Upload pytest HTML report (self-contained, single file)
         uses: actions/upload-artifact@v4
