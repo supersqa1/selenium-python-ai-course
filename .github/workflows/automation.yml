@@ -42,11 +42,12 @@ jobs:
           DB_PASSWORD: placeholder
         run: |
           mkdir -p results
-          pytest -m tcid12 -v --html=results/report.html --self-contained-html
+          # No --self-contained-html: images go to results/assets/ so they display when report is opened from file://
+          pytest -m tcid12 -v --html=results/report.html
 
-      - name: Upload pytest HTML report
+      - name: Upload pytest HTML report (report + assets so images display)
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: pytest-html-report
-          path: results/report.html
+          path: results/
