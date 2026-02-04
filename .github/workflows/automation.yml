@@ -34,7 +34,7 @@ jobs:
         env:
           BROWSER: headlesschrome
           RESULTS_DIR: ./results
-          CHROME_BIN: /usr/bin/chromium
+          # CHROME_BIN: /usr/bin/chromium
           # Required by validate_environment(); this test does not use API/DB. Use repo secrets for real values.
           API_KEY: ck_placeholder
           API_SECRET: cs_placeholder
