@@ -41,6 +41,10 @@ jobs:
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_PORT: ${{ secrets.DB_PORT }}
           DB_NAME: ${{ secrets.DB_NAME }}
+          MY_ACCOUNT_SMOKE_USERNAME: ${{ secrets.MY_ACCOUNT_SMOKE_USERNAME }}
+          MY_ACCOUNT_SMOKE_PASSWORD: ${{ secrets.MY_ACCOUNT_SMOKE_PASSWORD }}
+          USER_WITH_ONE_ORDER_USERNAME: ${{ secrets.USER_WITH_ONE_ORDER_USERNAME }}
+          USER_WITH_ONE_ORDER_PASSWORD: ${{ secrets.USER_WITH_ONE_ORDER_PASSWORD }}
         run: |
           cd ssqatest
           mkdir -p results
