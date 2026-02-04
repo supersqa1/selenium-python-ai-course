@@ -1,0 +1,43 @@
+# Run one automation test on Ubuntu (home page smoke).
+# Uses system Chromium; no third-party actions except checkout and setup-python.
+
+name: Automation-Selenium
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  run-automation:
+    name: Run full regression test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # - name: Install Chromium and ChromeDriver
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y chromium chromium-driver
+      - name: Take a look at location files
+        run: ls -la
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run home page smoke test
+        env:
+          BROWSER: headlesschrome
+          RESULTS_DIR: ./results
+          CHROME_BIN: /usr/bin/chromium
+          # Required by validate_environment(); this test does not use API/DB. Use repo secrets for real values.
+          API_KEY: ck_placeholder
+          API_SECRET: cs_placeholder
+          DB_USER: root
+          DB_PASSWORD: placeholder
+        run: pytest ssqatest/tests/home_page/test_home_page_smoke.py -v

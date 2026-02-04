@@ -24,6 +24,7 @@ class TestMyAccountLoggedInSmoke:
         page = MyAccountSignedIn(self.driver)
         assert page.is_account_area_visible(), "Account area should be visible and login form should not be shown."
         assert page.is_logout_link_visible(), "Log out link should be visible."
+        assert 1 == 2, "fail on purpose to test the test"
 
     @pytest.mark.tcid149
     def test_left_nav_shows_expected_links(self):
