@@ -16,6 +16,7 @@ class TestLoginNegative:
         my_account.input_login_username('adfjladkf')
         my_account.input_login_password('adfadfadf')
         my_account.click_login_button()
+        assert 1 == 2, "fail on purpose to test the test"
 
         # verify error message
         # expected_err = 'Unknown username. Check again or try your email address.'
