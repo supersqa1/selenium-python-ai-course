@@ -34,11 +34,13 @@ jobs:
         env:
           BROWSER: headlesschrome
           RESULTS_DIR: ./results
-          # Required by validate_environment(); this test does not use API/DB. Use repo secrets for real values.
-          API_KEY: ck_placeholder
-          API_SECRET: cs_placeholder
-          DB_USER: root
-          DB_PASSWORD: placeholder
+          API_KEY: ${{ secrets.API_KEY }}
+          API_SECRET: ${{ secrets.API_SECRET }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
         run: |
           cd ssqatest
           mkdir -p results
