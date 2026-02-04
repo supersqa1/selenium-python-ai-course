@@ -1,5 +1,4 @@
-# Run one automation test on Ubuntu (home page smoke).
-# Uses system Chromium; no third-party actions except checkout and setup-python.
+# Run automation tests on Ubuntu (Chrome and Firefox; browsers pre-installed on ubuntu-latest).
 
 name: Automation-Selenium
 
@@ -9,8 +8,12 @@ on:
 
 jobs:
   run-automation:
-    name: Run full regression test
+    name: Run tests (${{ matrix.browser }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chrome, firefox]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,19 +23,12 @@ jobs:
         with:
           python-version: "3.12"
 
-      # - name: Install Chromium and ChromeDriver
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y chromium chromium-driver
-      - name: Take a look at location files
-        run: ls -la
-
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run home page smoke test
+      - name: Run tests
         env:
-          BROWSER: headlesschrome
+          BROWSER: headless${{ matrix.browser }}
           RESULTS_DIR: ./results
           API_KEY: ${{ secrets.API_KEY }}
           API_SECRET: ${{ secrets.API_SECRET }}
@@ -48,16 +44,13 @@ jobs:
         run: |
           cd ssqatest
           mkdir -p results
-          # Self-contained: screenshot embedded as base64 in report (single file).
-          # If images don't show when opening the file directly, run: python -m http.server 8000
-          # in the report folder and open http://localhost:8000/report.html
           pytest tests -v --html=../results/report.html --self-contained-html
 
-      - name: Upload pytest HTML report (self-contained, single file)
+      - name: Upload pytest HTML report (${{ matrix.browser }})
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: pytest-html-report
+          name: pytest-html-report-${{ matrix.browser }}
           path: results/report.html
 
   deploy-pages:
@@ -72,10 +65,10 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
-      - name: Download report artifact
+      - name: Download Chrome report artifact
         uses: actions/download-artifact@v4
         with:
-          name: pytest-html-report
+          name: pytest-html-report-chrome
 
       - name: Set up Pages root (report as index)
         run: |
