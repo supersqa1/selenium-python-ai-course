@@ -5,6 +5,7 @@ from selenium.webdriver.chrome.options import Options as ChOptions
 from selenium.webdriver.firefox.options import Options as FFOptions
 
 import os
+import time
 import allure
 from dotenv import load_dotenv
 from ssqatest.src.helpers.config_helpers import validate_environment, get_base_url, get_test_user
@@ -133,6 +134,8 @@ def pytest_runtest_makereport(item, call):
             report.extra = extra
             return
 
+        # Brief pause so the page has time to paint (helps avoid white screenshot in CI/headless)
+        time.sleep(0.5)
         screenshot_base64 = driver.get_screenshot_as_base64()
         extra.append(pytest_html.extras.image(screenshot_base64))
 

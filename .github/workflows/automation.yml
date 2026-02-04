@@ -34,7 +34,6 @@ jobs:
         env:
           BROWSER: headlesschrome
           RESULTS_DIR: ./results
-          # CHROME_BIN: /usr/bin/chromium
           # Required by validate_environment(); this test does not use API/DB. Use repo secrets for real values.
           API_KEY: ck_placeholder
           API_SECRET: cs_placeholder
@@ -42,12 +41,14 @@ jobs:
           DB_PASSWORD: placeholder
         run: |
           mkdir -p results
-          # No --self-contained-html: images go to results/assets/ so they display when report is opened from file://
-          pytest -m tcid12 -v --html=results/report.html
+          # Self-contained: screenshot embedded as base64 in report (single file).
+          # If images don't show when opening the file directly, run: python -m http.server 8000
+          # in the report folder and open http://localhost:8000/report.html
+          pytest -m tcid12 -v --html=results/report.html --self-contained-html
 
-      - name: Upload pytest HTML report (report + assets so images display)
+      - name: Upload pytest HTML report (self-contained, single file)
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: pytest-html-report
-          path: results/
+          path: results/report.html
