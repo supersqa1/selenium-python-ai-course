@@ -40,4 +40,4 @@ jobs:
           API_SECRET: cs_placeholder
           DB_USER: root
           DB_PASSWORD: placeholder
-        run: pytest ssqatest/tests/home_page/test_home_page_smoke.py -v
+        run: pytest -m tcid12 -v

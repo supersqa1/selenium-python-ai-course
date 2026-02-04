@@ -4,10 +4,8 @@
 name: CI/CD Demo Pipeline
 
 on:
-  push:
-    # No branches filter = runs on push to every branch
-  pull_request:
-    # No branches filter = runs on PR to every branch
+  workflow_dispatch:
+    # Runs only when manually triggered from the Actions tab (not on push or PR)
 
 env:
   PYTHON_VERSION: "3.11"
