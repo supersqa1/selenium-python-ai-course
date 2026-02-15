@@ -1,0 +1,91 @@
+# Run automation tests on Ubuntu (Chrome and Firefox; browsers pre-installed on ubuntu-latest).
+
+name: Automation-Selenium
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  run-automation:
+    name: Run tests (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chrome, firefox]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        env:
+          BROWSER: headless${{ matrix.browser }}
+          RESULTS_DIR: ./results
+          API_KEY: ${{ secrets.API_KEY }}
+          API_SECRET: ${{ secrets.API_SECRET }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          MY_ACCOUNT_SMOKE_USERNAME: ${{ secrets.MY_ACCOUNT_SMOKE_USERNAME }}
+          MY_ACCOUNT_SMOKE_PASSWORD: ${{ secrets.MY_ACCOUNT_SMOKE_PASSWORD }}
+          USER_WITH_ONE_ORDER_USERNAME: ${{ secrets.USER_WITH_ONE_ORDER_USERNAME }}
+          USER_WITH_ONE_ORDER_PASSWORD: ${{ secrets.USER_WITH_ONE_ORDER_PASSWORD }}
+        run: |
+          cd ssqatest
+          mkdir -p results
+          pytest tests -v --html=../results/report.html --self-contained-html
+
+      - name: Upload pytest HTML report (${{ matrix.browser }})
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pytest-html-report-${{ matrix.browser }}
+          path: results/report.html
+
+  deploy-pages:
+    name: Deploy report to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: run-automation
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Download Chrome report artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pytest-html-report-chrome
+
+      - name: Set up Pages root (report as index)
+        run: |
+          mkdir -p report-site
+          cp report.html report-site/index.html
+
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: report-site
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Report URL in summary
+        run: |
+          echo "## Report published" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** [${{ steps.deploy.outputs.page_url }}](${{ steps.deploy.outputs.page_url }})" >> $GITHUB_STEP_SUMMARY
